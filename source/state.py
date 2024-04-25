@@ -68,7 +68,6 @@ class State:
 
         # out of bounds test
         if new_position.X >= 0 and new_position.X < constants.BOARD_SIZE and new_position.Y >= 0 and new_position.Y < constants.BOARD_SIZE:
-
             if direction.not_diagonal():
                 # normal move (0, 1) or (-1, 0)...
                 if direction.abs_sum() == 1:
@@ -88,7 +87,6 @@ class State:
                         # check for 2 walls so that the jump will clear
                         if not self.wall_between(position, intermediate_position) and not self.wall_between(intermediate_position, new_position):
                             return True
-
         return False
 
     
