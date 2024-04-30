@@ -130,8 +130,71 @@ class Agent:
 
 
 
+class AZAgent:
+    """ Parent class of TopAgent and BottomAgent. Handles action selection and Q-learning updates.
+        Differences between agents are managed by overridden methods for state perspective and action transformations.
+    """
+    def __init__(self, static_actions, name):
+        self.static_actions = static_actions
+        self.exploration_probability = constants.STARTING_EXPLORATION_PROBABILITY
+        self.steps = 1
+        self.name = name
 
+    def take_action(self, board_state, valid_human_action=None):
+        state_vector = self.get_perspective_state(board_state)
+        action_index = None
 
+        # if valid_human_action is None:
+        #     if only_inference or random.random() > self.exploration_probability:
+        #         action_index = self.greedy_action(state_vector, board_state)
+        #     else:
+        #         action_index = self.random_action(board_state)
+        #     if action_index is None:
+        #         return None  # Indicate no valid action available
+        #     action = self.static_actions.all_actions[action_index]
+        # else:
+        action = self.action_to_global_and_back(valid_human_action)
+        action_index = self.static_actions.get_index_of_action(action)
+
+        state_action = self.action_to_global_and_back(action)
+        reward = board_state.apply_action(self.name, state_action)
+        next_state_vector = self.get_perspective_state(board_state)
+
+        self.steps += 1
+        self.update_exploration_probability()
+
+        return next_state_vector, reward
+
+    def update_exploration_probability(self):
+        self.exploration_probability = constants.ENDING_EXPLORATION_PROBABILITY + \
+                                       (constants.STARTING_EXPLORATION_PROBABILITY - constants.ENDING_EXPLORATION_PROBABILITY) \
+                                       * math.exp(-constants.EXPLORATION_PROBABILITY_DECAY * self.steps)
+
+    def random_action(self, board_state):
+        actions = self.static_actions.move_actions if random.random() < constants.MOVE_ACTION_PROBABILITY else self.static_actions.all_actions
+        action_indexes = list(range(len(actions)))
+        random.shuffle(action_indexes)
+        return self.first_legal_action(action_indexes, board_state)
+
+    def first_legal_action(self, action_indexes, board_state):
+        for action_index in action_indexes:
+            if self.is_legal_action(action_index, board_state):
+                return action_index
+
+    def is_legal_action(self, action_index, board_state):
+        action = self.static_actions.all_actions[action_index]
+        state_action = self.action_to_global_and_back(action)
+        return board_state.is_legal_action(state_action, self.name)
+
+    def get_perspective_state(self, board_state):
+        full_grid_size = board_state.full_grid_size
+        grid = board_state.build_grid(BoardElement.AGENT_BOT, BoardElement.AGENT_TOP)
+        vector = [grid[x][y] for y in range(full_grid_size) for x in range(full_grid_size)]
+        vector.extend([board_state.wall_counts[BoardElement.AGENT_BOT], board_state.wall_counts[BoardElement.AGENT_TOP]])
+        return np.array(vector)
+
+    def action_to_global_and_back(self, agent_action):
+        return agent_action
 
 
 
