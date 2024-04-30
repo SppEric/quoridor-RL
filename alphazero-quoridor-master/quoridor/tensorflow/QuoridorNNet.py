@@ -36,7 +36,7 @@ class QuoridorNNet():
             self.pi = Dense(s_fc2, self.action_size)                                                        # batch_size x self.action_size
             self.prob = tf.nn.softmax(self.pi)
             self.v = Tanh(Dense(s_fc2, 1))                                                               # batch_size x 1
-            self.calculate_loss()
+            self.calculate_loss()   
 
     def conv2d(self, x, out_channels, padding):
       return tf.layers.conv2d(x, out_channels, kernel_size=[3,3], data_format='channels_first', padding=padding, use_bias=False)
