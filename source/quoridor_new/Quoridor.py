@@ -8,6 +8,9 @@ class Quoridor(Game):
         # this is not used oopsie
         self.n = n
         self.game = QuoridorGame()
+
+        # The agents all have the same persepctive even though
+        # the code doesn't seem like it. Might change this???
         
     def getInitBoard(self):
         state = self.game.state
@@ -59,7 +62,7 @@ class Quoridor(Game):
             return -1
         
     def getCanonicalForm(self, board, player):
-        return self.game.agents["B" if player == 1 else "T"].get_perspective_state(board)
+        return self.game.agents["B" if player == 1 else "T"].get_perspective_state(self.game.state)
     
     def stringRepresentation(self, board):
         # I have no idea what this is for
