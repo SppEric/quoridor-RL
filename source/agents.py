@@ -137,7 +137,6 @@ class AZAgent:
     def __init__(self, static_actions, name):
         self.static_actions = static_actions
         self.exploration_probability = constants.STARTING_EXPLORATION_PROBABILITY
-        self.steps = 1
         self.name = name
 
     def take_action(self, board_state, valid_human_action=None):
@@ -160,15 +159,7 @@ class AZAgent:
         reward = board_state.apply_action(self.name, state_action)
         next_state_vector = self.get_perspective_state(board_state)
 
-        self.steps += 1
-        self.update_exploration_probability()
-
-        return next_state_vector, reward
-
-    def update_exploration_probability(self):
-        self.exploration_probability = constants.ENDING_EXPLORATION_PROBABILITY + \
-                                       (constants.STARTING_EXPLORATION_PROBABILITY - constants.ENDING_EXPLORATION_PROBABILITY) \
-                                       * math.exp(-constants.EXPLORATION_PROBABILITY_DECAY * self.steps)
+        return board_state, next_state_vector, reward
 
     def random_action(self, board_state):
         actions = self.static_actions.move_actions if random.random() < constants.MOVE_ACTION_PROBABILITY else self.static_actions.all_actions

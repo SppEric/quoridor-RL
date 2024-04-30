@@ -1,16 +1,54 @@
-from NeuralNet import NeuralNet
+from alphazero.NeuralNet import NeuralNet
 import tensorflow as tf
 import numpy as np
 from QuoridorNeuralNet import QuoridorNeuralNet
+import wandb
+from wandb.keras import WandbMetricsLogger, WandbModelCheckpoint
 
 default_config = {
     'channel_sizes' : [512, 512, 512],          # Expecting 3 conv, 2 fc always?
-    'fc_layer_sizes' : [128, 64], 
+    'fc_layer_sizes' : [128], 
     'dropout' : 0.4,
     'optimizer' : 'adam',
-    'learning_rate' : 0.001,
-    'epochs' : 10,
-    'batch_size': 32,
+}
+
+# Start a run, tracking hyperparameters
+wandb.init(
+    # set the wandb project where this run will be logged
+    project="my-awesome-project",
+
+    # track hyperparameters and run metadata with wandb.config
+    config={
+        "layer_1": 512,
+        "activation_1": "relu",
+        "dropout": random.uniform(0.01, 0.80),
+        "layer_2": 10,
+        "activation_2": "softmax",
+        "optimizer": "sgd",
+        "loss": "sparse_categorical_crossentropy",
+        "metric": "accuracy",
+        "epoch": 8,
+        "batch_size": 256
+    }
+)
+
+sweep_config = {
+  'method': 'random', 
+  'metric': {
+      'name': 'val_loss',
+      'goal': 'minimize'
+  },
+  'parameters': {
+      'batch_size': {
+          'values': [32, 64, 128, 256]
+      },
+      'learning_rate':{
+          'values': [0.01, 0.005, 0.001, 0.0005, 0.0001]
+      },
+      'epochs': {
+          'value': 50
+      },
+  }
 }
 
 class QuoridorNetWrapper(NeuralNet):
