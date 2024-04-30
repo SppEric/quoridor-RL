@@ -23,6 +23,7 @@ class QuoridorGame:
         static_actions = StaticActions(constants.BOARD_SIZE)
         self.static_actions = static_actions
         self.state = State(static_actions)
+        self.board_size = (constants.BOARD_SIZE, constants.BOARD_SIZE)
 
         if constants.DISPLAY_GAME:
             self.display_game = DisplayGame()

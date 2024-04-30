@@ -93,7 +93,7 @@ class Game():
         Input:
             board: current board
             pi: policy vector of size self.getActionSize()
-
+                                           
         Returns:
             symmForms: a list of [(board,pi)] where each tuple is a symmetrical
                        form of the board and the corresponding pi vector. This

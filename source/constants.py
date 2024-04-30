@@ -1,8 +1,8 @@
 
 
 # SIZE OF THE GAME
-BOARD_SIZE = 4                          # board size (less complexity)
-NUM_WALLS = 2                           # number of walls each player starts with
+BOARD_SIZE = 5                          # board size (less complexity)
+NUM_WALLS = 3                           # number of walls each player starts with
 
 
 # PROGRAM PURPOSE
