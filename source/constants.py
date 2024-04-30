@@ -14,7 +14,7 @@ INITIALLY_USING_ONLY_INFERENCE = False
 RESTORE = False                         # signifies if agent should be loaded from tensorflow checkpoint (from disc)
 
 INITIAL_GAME_DELAY = 0                  # initial value for game_delay, which simply slows down the game so we can watch the agents plays ;)
-GAME_DELAY_SEONDS = 0                   # if game_delay is switched on, this is the delay used
+GAME_DELAY_SECONDS = 1                   # if game_delay is switched on, this is the delay used
 
 
 # TRAINING PARAMETERS
