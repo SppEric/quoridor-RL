@@ -2,6 +2,7 @@ from alphazero.Game import Game
 from game import QuoridorGame
 import numpy as np
 from actions import MoveAction, WallAction
+import copy
 
 class Quoridor(Game):
     def __init__(self, n):
@@ -33,7 +34,7 @@ class Quoridor(Game):
         action = self.game.static_actions.all_actions[action]
         
         next_board, next_state_vector, reward = agent.take_action(board, action)
-        next_board_copy = next_board.copy()
+        next_board_copy = copy.deepcopy(next_board)
 
         return next_board_copy, -player
 

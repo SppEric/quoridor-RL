@@ -104,11 +104,11 @@ class MCTS():
             if valids[a]:
                 if (s,a) in self.Qsa:
                     # NOTE: STOPPED INDEXING IN BY s HERE!!!
-                    u = self.Qsa[(s,a)] + self.args.cpuct*self.Ps[0][a]*math.sqrt(self.Ns[s])/(1+self.Nsa[(s,a)])
+                    u = self.Qsa[(s,a)] + self.args.cpuct*self.Ps[s][0][a]*math.sqrt(self.Ns[s])/(1+self.Nsa[(s,a)])
                 else:
-                    u = self.args.cpuct*self.Ps[0][a]*math.sqrt(self.Ns[s] + EPS)     # Q = 0 ?
-                if max(u) > cur_best:
-                    cur_best = max(u)
+                    u = self.args.cpuct*self.Ps[s][0][a]*math.sqrt(self.Ns[s] + EPS)     # Q = 0 ?
+                if u > cur_best:
+                    cur_best = u
                     best_act = a
 
         if s in self.sH or counter > 256: # cycle
@@ -117,7 +117,7 @@ class MCTS():
 
         a = best_act
         next_board, next_player = self.game.getNextState(board, 1, a)
-        next_s = self.game.getCanonicalForm(next_s, next_player)
+        next_s = self.game.getCanonicalForm(next_board, next_player)
 
         v = self.search(next_board, next_s, counter+1)
         if v == 0:
