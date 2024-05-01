@@ -44,7 +44,7 @@ class QuoridorNetWrapper(NeuralNet):
         # Input looks like many of (canonicalBoard, pi, reward * self.curPlayer)
         for epoch in range(self.epochs):
             print('EPOCH ::: ' + str(epoch+1))
-
+            epoch_loss = []
             batch_idx = 0
             while batch_idx < int(len(examples)/self.batch_size):
                 # Create inputs
@@ -67,15 +67,16 @@ class QuoridorNetWrapper(NeuralNet):
                 # Increment batch stuff
                 batch_idx += 1
 
-            # Backprop
-            grads = tape.gradient(loss, self.model.trainable_weights)
-            self.optimizer.apply_gradients(zip(grads, self.model.trainable_weights))
+                # Backprop
+                epoch_loss.append(loss)
+                grads = tape.gradient(loss, self.model.trainable_weights)
+                self.optimizer.apply_gradients(zip(grads, self.model.trainable_weights))
 
             # Do logging for end of epoch stuff
             # Idk what to track here
             if self.wandb:
                 wandb.log({'epochs': epoch,
-                    'loss': np.mean(loss)})
+                    'loss': np.mean(epoch_loss)})
                 
 
     def predict(self, board):
