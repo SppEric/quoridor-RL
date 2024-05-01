@@ -48,7 +48,7 @@ class Coach():
             canonicalBoard = self.game.getCanonicalForm(board,self.curPlayer)
             temp = int(episodeStep < self.args.tempThreshold)
             oldboard = board
-            pi = self.mcts.getActionProb(board, canonicalBoard, temp=temp)
+            pi = self.mcts.getActionProb(board, self.curPlayer, canonicalBoard, temp=temp)
             assert oldboard == board
 
             if np.sum(pi) == 0: break
@@ -62,10 +62,9 @@ class Coach():
 
             action = np.random.choice(len(pi), p=pi)
 
-            print("ERROR HERE")
             print(str(board))
+            print(pi)
             board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)
-            print("ERROR HERE 2")
 
             r = self.game.getGameEnded(board, self.curPlayer)
 

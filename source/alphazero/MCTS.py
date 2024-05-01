@@ -21,7 +21,7 @@ class MCTS():
 
         self.sH = {}        # state history, to detect cycle in search()
 
-    def getActionProb(self, board, canonicalBoard, temp=1):
+    def getActionProb(self, board, curPlayer, canonicalBoard, temp=1):
         """
         This function performs numMCTSSims simulations of MCTS starting from
         canonicalBoard.
@@ -46,8 +46,13 @@ class MCTS():
 
         counts = [x**(1./temp) for x in counts]
 
-        
-
+        valids = self.game.getValidMoves(board,curPlayer)
+        print("Counts", counts)
+        print(valids)
+        counts = counts * valids
+        if np.sum(counts) == 0:
+            print("All valid moves were masked, do workaround.")
+            counts = valids
         probs = [x/float(sum(counts)) for x in counts]
         return probs
 
