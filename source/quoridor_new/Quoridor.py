@@ -40,7 +40,7 @@ class Quoridor(Game):
 
     def getValidMoves(self, board, player):
         # THIS MIGHT SLOW US DOWN. SHOULD PROBABLY MAKE A FASTER VERSION
-        agent = self.game.agents["B" if player == 1 else "T"]
+        agent = "B" if player == 1 else "T"
         valid = np.zeros(self.getActionSize())
 
         for i, action in enumerate(self.game.static_actions.all_actions):

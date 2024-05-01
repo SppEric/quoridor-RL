@@ -8,11 +8,11 @@ NUM_WALLS = 3                           # number of walls each player starts wit
 # PROGRAM PURPOSE
 '''If you want a human to vs a trained agent, then turn these on
     Note: These can be toggles on or off during the games'''
-DISPLAY_GAME = True                     # false to avoid pygame altogether
+DISPLAY_GAME = False                     # false to avoid pygame altogether
 INITIALLY_HUMAN_PLAYING = True         # ultimate test of intelligence
 INITIALLY_USING_ONLY_INFERENCE = False
 RESTORE = False                         # signifies if agent should be loaded from tensorflow checkpoint (from disc)
-
+ALPHA_ZERO = True                       
 INITIAL_GAME_DELAY = 0                  # initial value for game_delay, which simply slows down the game so we can watch the agents plays ;)
 GAME_DELAY_SECONDS = 1                   # if game_delay is switched on, this is the delay used
 

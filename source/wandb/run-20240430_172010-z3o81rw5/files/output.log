@@ -1,0 +1,28 @@
+Setting up agents for AlphaZero...
+completed
+BATCHSIZE IS 128
+BATCHSIZE IS 128
+------ITER 1------
+40 NUMBER OF ACTIONSSS
+{'[0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n 0 0 5 0 0 0 0 3 3]': <tf.Tensor: shape=(1, 40), dtype=float32, numpy=
+array([[0.02659454, 0.0205518 , 0.        , 0.0205518 , 0.        ,
+        0.        , 0.        , 0.        , 0.0205518 , 0.0205518 ,
+        0.0205518 , 0.02918334, 0.0205518 , 0.03257028, 0.03398152,
+        0.0205518 , 0.08958538, 0.02784554, 0.0205518 , 0.03003939,
+        0.03102196, 0.0205518 , 0.0205518 , 0.03343951, 0.04084304,
+        0.0205518 , 0.0205518 , 0.0205518 , 0.03378312, 0.0205518 ,
+        0.0205518 , 0.05222147, 0.0205518 , 0.0205518 , 0.0205518 ,
+        0.0205518 , 0.03138694, 0.0226936 , 0.0587353 , 0.03559088]],
+      dtype=float32)>} PRINT THE Ps
+{'[0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n 0 0 5 0 0 0 0 3 3]': <tf.Tensor: shape=(1, 40), dtype=float32, numpy=
+array([[0.02659454, 0.0205518 , 0.        , 0.0205518 , 0.        ,
+        0.        , 0.        , 0.        , 0.0205518 , 0.0205518 ,
+        0.0205518 , 0.02918334, 0.0205518 , 0.03257028, 0.03398152,
+        0.0205518 , 0.08958538, 0.02784554, 0.0205518 , 0.03003939,
+        0.03102196, 0.0205518 , 0.0205518 , 0.03343951, 0.04084304,
+        0.0205518 , 0.0205518 , 0.0205518 , 0.03378312, 0.0205518 ,
+        0.0205518 , 0.05222147, 0.0205518 , 0.0205518 , 0.0205518 ,
+        0.0205518 , 0.03138694, 0.0226936 , 0.0587353 , 0.03559088]],
+      dtype=float32)>} PRINT THE Ps
+/Users/evaschiller/Documents/cs/grad/genv/lib/python3.9/site-packages/keras/src/layers/layer.py:360: UserWarning: `build()` was called on layer 'quoridor_neural_net', however the layer does not have a `build()` method implemented and it looks like it has unbuilt state. This will cause the layer to be marked as built, despite not being actually built, which may cause failures down the line. Make sure to implement a proper `build()` method.
+  warnings.warn(

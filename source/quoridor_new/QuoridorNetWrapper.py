@@ -2,68 +2,31 @@ from alphazero.NeuralNet import NeuralNet
 import tensorflow as tf
 import numpy as np
 import random
-from QuoridorNeuralNet import QuoridorNeuralNet
+from quoridor_new.QuoridorNeuralNet import QuoridorNeuralNet
 import wandb
-from wandb.keras import WandbMetricsLogger, WandbModelCheckpoint
+from wandb.keras import WandbCallback
 
-default_config = {
-    'channel_sizes' : [512, 512, 512],          # Expecting 3 conv, 2 fc always?
-    'fc_layer_sizes' : [128], 
-    'dropout' : 0.4,
-    'optimizer' : 'adam',
-}
 
-# Start a run, tracking hyperparameters
-wandb.init(
-    # set the wandb project where this run will be logged
-    project="my-awesome-project",
-
-    # track hyperparameters and run metadata with wandb.config
-    config={
-        "layer_1": 512,
-        "activation_1": "relu",
-        "dropout": random.uniform(0.01, 0.80),
-        "layer_2": 10,
-        "activation_2": "softmax",
-        "optimizer": "sgd",
-        "loss": "sparse_categorical_crossentropy",
-        "metric": "accuracy",
-        "epoch": 8,
-        "batch_size": 256
-    }
-)
-
-sweep_config = {
-  'method': 'random', 
-  'metric': {
-      'name': 'val_loss',
-      'goal': 'minimize'
-  },
-  'parameters': {
-      'batch_size': {
-          'values': [32, 64, 128, 256]
-      },
-      'learning_rate':{
-          'values': [0.01, 0.005, 0.001, 0.0005, 0.0001]
-      },
-      'epochs': {
-          'value': 50
-      },
-  }
-}
 
 class QuoridorNetWrapper(NeuralNet):
-    def __init__(self, game, config=default_config):
+    def __init__(self, game, config, is_wandb):
         # Set up from config
-        self.config = config
-        self.optimizer = config.optimizer
-        self.batch_size = config.batch_size
+        self.config = config['parameters']
+        if is_wandb:
+            self.optimizer = wandb.config.optimizer
+            self.batch_size = wandb.config.batch_size
+            self.epochs = wandb.config.epochs
+            print("BATCHSIZE IS", self.batch_size)
+        else:
+            self.optimizer = config.optimizer
+            self.batch_size = config.batch_size
+        self.wandb = is_wandb
 
         # We use a custom loss function, written below
         self.loss_fn = self.quoridor_loss
 
         # Initialize model
-        self.model = QuoridorNeuralNet(game, config)
+        self.model = QuoridorNeuralNet(game, self.config)
 
 
     def train(self, examples):
@@ -78,13 +41,13 @@ class QuoridorNetWrapper(NeuralNet):
                       board in its canonical form.
         """
         # Input looks like many of (canonicalBoard, pi, reward * self.curPlayer)
-        for epoch in range(self.config.epochs):
+        for epoch in range(self.epochs):
             print('EPOCH ::: ' + str(epoch+1))
 
             batch_idx = 0
-            while batch_idx < int(len(examples)/self.config.batch_size):
+            while batch_idx < int(len(examples)/self.batch_size):
                 # Create inputs
-                sample_ids = np.random.randint(len(examples), size=self.config.batch_size)
+                sample_ids = np.random.randint(len(examples), size=self.batch_size)
                 boards, target_pis, target_vs = list(zip(*[examples[i] for i in sample_ids]))
 
                 # Run model
@@ -98,7 +61,7 @@ class QuoridorNetWrapper(NeuralNet):
                         "Training loss (for one batch) at step %d: %.4f"
                         % (batch_idx, float(loss))
                     )
-                    print("Seen so far: %d samples" % ((batch_idx + 1) * self.config.batch_size))
+                    print("Seen so far: %d samples" % ((batch_idx + 1) * self.batch_size))
 
                 # Increment batch stuff
                 batch_idx += 1
@@ -109,6 +72,9 @@ class QuoridorNetWrapper(NeuralNet):
 
             # Do logging for end of epoch stuff
             # Idk what to track here
+            if self.wandb:
+                wandb.log({'epochs': epoch,
+                    'loss': np.mean(loss)})
                 
 
     def predict(self, board):

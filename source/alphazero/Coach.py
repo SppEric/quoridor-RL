@@ -1,8 +1,7 @@
 from collections import deque
-from Arena import Arena
-from MCTS import MCTS
+from alphazero.Arena import Arena
+from alphazero.MCTS import MCTS
 import numpy as np
-from pytorch_classification.utils import Bar, AverageMeter
 import time, os, sys
 from pickle import Pickler, Unpickler
 from random import shuffle
@@ -13,10 +12,10 @@ class Coach():
     This class executes the self-play + learning. It uses the functions defined
     in Game and NeuralNet. args are specified in main.py.
     """
-    def __init__(self, game, nnet, args):
+    def __init__(self, game, nnet, args, sweep_config):
         self.game = game
         self.nnet = nnet
-        self.pnet = self.nnet.__class__(self.game)  # the competitor network
+        self.pnet = self.nnet.__class__(self.game, sweep_config, args.wandb)  # the competitor network
         self.args = args
         self.mcts = MCTS(self.game, self.nnet, self.args)
         self.trainExamplesHistory = []    # history of examples from args.numItersForTrainExamplesHistory latest iterations
@@ -47,7 +46,7 @@ class Coach():
             canonicalBoard = self.game.getCanonicalForm(board,self.curPlayer)
             temp = int(episodeStep < self.args.tempThreshold)
 
-            pi = self.mcts.getActionProb(canonicalBoard, temp=temp)
+            pi = self.mcts.getActionProb(board, canonicalBoard, temp=temp)
 
             if np.sum(pi) == 0: break
 
@@ -83,8 +82,8 @@ class Coach():
             if not self.skipFirstSelfPlay or i>1:
                 iterationTrainExamples = deque([], maxlen=self.args.maxlenOfQueue)
 
-                eps_time = AverageMeter()
-                bar = Bar('Self Play', max=self.args.numEps)
+                # eps_time = AverageMeter()
+                # bar = Bar('Self Play', max=self.args.numEps)
                 end = time.time()
 
                 for eps in range(self.args.numEps):
@@ -92,12 +91,12 @@ class Coach():
                     iterationTrainExamples += self.executeEpisode()
 
                     # bookkeeping + plot progress
-                    eps_time.update(time.time() - end)
+                    # eps_time.update(time.time() - end)
                     end = time.time()
-                    bar.suffix  = '({eps}/{maxeps}) Eps Time: {et:.3f}s | Total: {total:} | ETA: {eta:}'.format(eps=eps+1, maxeps=self.args.numEps, et=eps_time.avg,
-                                                                                                               total=bar.elapsed_td, eta=bar.eta_td)
-                    bar.next()
-                bar.finish()
+                    # bar.suffix  = '({eps}/{maxeps}) Eps Time: {et:.3f}s | Total: {total:} | ETA: {eta:}'.format(eps=eps+1, maxeps=self.args.numEps, et=eps_time.avg,
+                                                                                                            #    total=bar.elapsed_td, eta=bar.eta_td)
+                    # bar.next()
+                # bar.finish()
 
                 # save the iteration examples to the history
                 self.trainExamplesHistory.append(iterationTrainExamples)
@@ -128,8 +127,8 @@ class Coach():
             nmcts = MCTS(self.game, self.nnet, self.args)
 
             print('PITTING AGAINST PREVIOUS VERSION')
-            arena = Arena(lambda x: np.argmax(pmcts.getActionProb(x, temp=0)),
-                          lambda x: np.argmax(nmcts.getActionProb(x, temp=0)), self.game)
+            arena = Arena(lambda x, y: np.argmax(pmcts.getActionProb(x, y, temp=0)),
+                          lambda x, y: np.argmax(nmcts.getActionProb(x, y, temp=0)), self.game)
             pwins, nwins, draws = arena.playGames(self.args.arenaCompare)
 
             print('NEW/PREV WINS : %d / %d ; DRAWS : %d' % (nwins, pwins, draws))

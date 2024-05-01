@@ -1,0 +1,35 @@
+2024-04-30 16:48:13,212 INFO    Thread-2  :78721 [wandb_setup.py:_flush():76] Current SDK version is 0.16.6
+2024-04-30 16:48:13,212 INFO    Thread-2  :78721 [wandb_setup.py:_flush():76] Configure stats pid to 78721
+2024-04-30 16:48:13,212 INFO    Thread-2  :78721 [wandb_setup.py:_flush():76] Loading settings from /Users/evaschiller/.config/wandb/settings
+2024-04-30 16:48:13,212 INFO    Thread-2  :78721 [wandb_setup.py:_flush():76] Loading settings from /Users/evaschiller/Documents/cs/grad/quoridor-RL/source/wandb/settings
+2024-04-30 16:48:13,212 INFO    Thread-2  :78721 [wandb_setup.py:_flush():76] Loading settings from environment variables: {'project': 'quoridor-RL', 'entity': 'eva-schiller', 'root_dir': '/Users/evaschiller/Documents/cs/grad/quoridor-RL/source', 'sweep_id': 'fbh7x018', 'run_id': '6kb9naay', 'sweep_param_path': '/Users/evaschiller/Documents/cs/grad/quoridor-RL/source/wandb/sweep-fbh7x018/config-6kb9naay.yaml'}
+2024-04-30 16:48:13,213 INFO    Thread-2  :78721 [wandb_setup.py:_flush():76] Applying setup settings: {'_disable_service': False}
+2024-04-30 16:48:13,213 INFO    Thread-2  :78721 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': 'source/main.py', 'program_abspath': '/Users/evaschiller/Documents/cs/grad/quoridor-RL/source/main.py', 'program': '/Users/evaschiller/Documents/cs/grad/quoridor-RL/source/main.py'}
+2024-04-30 16:48:13,213 INFO    Thread-2  :78721 [wandb_setup.py:_flush():76] Applying login settings: {}
+2024-04-30 16:48:13,213 INFO    Thread-2  :78721 [wandb_init.py:_log_setup():521] Logging user logs to /Users/evaschiller/Documents/cs/grad/quoridor-RL/source/wandb/run-20240430_164813-6kb9naay/logs/debug.log
+2024-04-30 16:48:13,213 INFO    Thread-2  :78721 [wandb_init.py:_log_setup():522] Logging internal logs to /Users/evaschiller/Documents/cs/grad/quoridor-RL/source/wandb/run-20240430_164813-6kb9naay/logs/debug-internal.log
+2024-04-30 16:48:13,213 INFO    Thread-2  :78721 [wandb_init.py:init():561] calling init triggers
+2024-04-30 16:48:13,213 INFO    Thread-2  :78721 [wandb_init.py:init():568] wandb.init called with sweep_config: {'batch_size': 64, 'channel_sizes': 512, 'dropout': 0.4, 'epochs': 50, 'fc_layer_sizes': 64, 'learning_rate': 0.0001, 'optimizer': 'adam'}
+config: {}
+2024-04-30 16:48:13,213 INFO    Thread-2  :78721 [wandb_init.py:init():611] starting backend
+2024-04-30 16:48:13,213 INFO    Thread-2  :78721 [wandb_init.py:init():615] setting up manager
+2024-04-30 16:48:13,218 INFO    Thread-2  :78721 [backend.py:_multiprocessing_setup():105] multiprocessing start_methods=spawn,fork,forkserver, using: spawn
+2024-04-30 16:48:13,220 INFO    Thread-2  :78721 [wandb_init.py:init():623] backend started and connected
+2024-04-30 16:48:13,227 INFO    Thread-2  :78721 [wandb_run.py:_config_callback():1347] config_cb None None {'batch_size': 64, 'channel_sizes': 512, 'dropout': 0.4, 'epochs': 50, 'fc_layer_sizes': 64, 'learning_rate': 0.0001, 'optimizer': 'adam'}
+2024-04-30 16:48:13,229 INFO    Thread-2  :78721 [wandb_init.py:init():715] updated telemetry
+2024-04-30 16:48:13,238 INFO    Thread-2  :78721 [wandb_init.py:init():748] communicating run to backend with 90.0 second timeout
+2024-04-30 16:48:13,431 INFO    Thread-2  :78721 [wandb_run.py:_on_init():2357] communicating current version
+2024-04-30 16:48:13,500 INFO    Thread-2  :78721 [wandb_run.py:_on_init():2366] got version response 
+2024-04-30 16:48:13,501 INFO    Thread-2  :78721 [wandb_init.py:init():799] starting run threads in backend
+2024-04-30 16:48:13,614 INFO    Thread-2  :78721 [wandb_run.py:_console_start():2335] atexit reg
+2024-04-30 16:48:13,615 INFO    Thread-2  :78721 [wandb_run.py:_redirect():2190] redirect: wrap_raw
+2024-04-30 16:48:13,615 INFO    Thread-2  :78721 [wandb_run.py:_redirect():2255] Wrapping output streams.
+2024-04-30 16:48:13,615 INFO    Thread-2  :78721 [wandb_run.py:_redirect():2280] Redirects installed.
+2024-04-30 16:48:13,615 INFO    Thread-2  :78721 [wandb_init.py:init():842] run started, returning control to user process
+2024-04-30 16:48:13,822 INFO    Thread-2  :78721 [wandb_run.py:_finish():2064] finishing run eva-schiller/quoridor-RL/6kb9naay
+2024-04-30 16:48:13,822 INFO    Thread-2  :78721 [wandb_run.py:_atexit_cleanup():2304] got exitcode: 1
+2024-04-30 16:48:13,822 INFO    Thread-2  :78721 [wandb_run.py:_restore():2287] restore
+2024-04-30 16:48:13,822 INFO    Thread-2  :78721 [wandb_run.py:_restore():2293] restore done
+2024-04-30 16:48:18,134 INFO    Thread-2  :78721 [wandb_run.py:_footer_history_summary_info():3936] rendering history
+2024-04-30 16:48:18,135 INFO    Thread-2  :78721 [wandb_run.py:_footer_history_summary_info():3968] rendering summary
+2024-04-30 16:48:18,145 INFO    Thread-2  :78721 [wandb_run.py:_footer_sync_info():3895] logging synced files

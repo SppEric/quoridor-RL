@@ -1,0 +1,16 @@
+Setting up agents for AlphaZero...
+completed
+BATCHSIZE IS 128
+BATCHSIZE IS 128
+------ITER 1------
+tf.Tensor(
+[3.2365913e-06 2.2319441e-06 0.0000000e+00 2.3894602e-06 0.0000000e+00
+ 0.0000000e+00 0.0000000e+00 0.0000000e+00 2.2319441e-06 2.2319441e-06
+ 2.2319441e-06 2.2319441e-06 3.8068781e-06 3.4401583e-06 3.8004819e-06
+ 3.2065047e-06 2.2319441e-06 2.2319441e-06 2.2319441e-06 2.2319441e-06
+ 2.4973683e-06 2.2319441e-06 2.2319441e-06 2.2319441e-06 2.2319441e-06
+ 2.2338002e-06 3.8533335e-06 2.7104566e-06 3.3641402e-06 4.1324711e-06
+ 2.8866175e-06 2.4578862e-06 4.8869038e-06 4.8241191e-06 4.2593551e-06
+ 2.2319441e-06 2.2319441e-06 2.2319441e-06 2.2319441e-06 4.0704135e-06], shape=(40,), dtype=float32) U ARRAY HERE
+/Users/evaschiller/Documents/cs/grad/genv/lib/python3.9/site-packages/keras/src/layers/layer.py:360: UserWarning: `build()` was called on layer 'quoridor_neural_net', however the layer does not have a `build()` method implemented and it looks like it has unbuilt state. This will cause the layer to be marked as built, despite not being actually built, which may cause failures down the line. Make sure to implement a proper `build()` method.
+  warnings.warn(
