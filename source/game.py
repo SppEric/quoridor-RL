@@ -7,7 +7,7 @@ from memory import MemoryInstance
 from point import Point
 from actions import StaticActions, MoveAction, WallAction
 from model import Model
-from agents import TopAgent, BottomAgent, AZAgent
+from agents import TopAgent, BottomAgent, TopAZAgent, BottomAZAgent
 from state import State
 from display_game import DisplayGame
 
@@ -30,8 +30,8 @@ class QuoridorGame:
 
         if constants.ALPHA_ZERO:
             print("Setting up agents for AlphaZero...")
-            top_agent = AZAgent(static_actions, BoardElement.AGENT_TOP)
-            bottom_agent = AZAgent(static_actions, BoardElement.AGENT_BOT)
+            top_agent = TopAZAgent(static_actions)
+            bottom_agent = BottomAZAgent(static_actions)
             print("completed\n")
         else:
             print("Setting up agent networks...")

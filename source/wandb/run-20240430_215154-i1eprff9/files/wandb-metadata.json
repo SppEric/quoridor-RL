@@ -1,0 +1,49 @@
+{
+    "os": "macOS-13.5-arm64-arm-64bit",
+    "python": "3.9.13",
+    "heartbeatAt": "2024-05-01T01:51:55.155584",
+    "startedAt": "2024-05-01T01:51:54.854703",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/Users/evaschiller/Documents/cs/grad/quoridor-RL/source/main.py",
+    "codePathLocal": "main.py",
+    "codePath": "source/main.py",
+    "git": {
+        "remote": "https://github.com/SppEric/quoridor-RL.git",
+        "commit": "98b84a15a6d91177a7b8dd0f5d005ad02a2faf38"
+    },
+    "email": "eva_schiller@brown.edu",
+    "root": "/Users/evaschiller/Documents/cs/grad/quoridor-RL",
+    "host": "evas-air-5.devices.brown.edu",
+    "username": "evaschiller",
+    "executable": "/Users/evaschiller/Documents/cs/grad/genv/bin/python",
+    "cpu_count": 8,
+    "cpu_count_logical": 8,
+    "cpu_freq": {
+        "current": 3504,
+        "min": 600,
+        "max": 3504
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3504,
+            "min": 600,
+            "max": 3504
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 926.3517189025879,
+            "used": 11.109302520751953
+        }
+    },
+    "gpuapple": {
+        "type": "arm",
+        "vendor": "Apple"
+    },
+    "memory": {
+        "total": 24.0
+    }
+}

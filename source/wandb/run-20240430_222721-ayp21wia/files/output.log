@@ -1,0 +1,240 @@
+Setting up agents for AlphaZero...
+completed
+BATCHSIZE IS 128
+BATCHSIZE IS 128
+------ITER 1------
+B taking action 39
+B taking action 33
+B taking action 18
+B taking action 10
+illegal action <actions.WallAction object at 0x150451970>
+B taking action 16
+illegal action <actions.WallAction object at 0x1504512b0>
+B taking action 14
+B taking action 36
+B taking action 23
+B taking action 11
+illegal action <actions.WallAction object at 0x150451850>
+B taking action 24
+illegal action <actions.WallAction object at 0x15044b940>
+B taking action 32
+illegal action <actions.WallAction object at 0x15044b1c0>
+B taking action 17
+illegal action <actions.WallAction object at 0x150451190>
+B taking action 15
+illegal action <actions.WallAction object at 0x1504513a0>
+B taking action 3
+illegal action <actions.MoveAction object at 0x150457250>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 37
+illegal action <actions.WallAction object at 0x150094b80>
+B taking action 30
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+T taking action 30
+illegal action <actions.WallAction object at 0x150457be0>
+B taking action 35
+B taking action 35
+illegal action <actions.WallAction object at 0x150094dc0>
+B taking action 35
+illegal action <actions.WallAction object at 0x150094dc0>
+B taking action 35
+illegal action <actions.WallAction object at 0x150094dc0>
+B taking action 35
+illegal action <actions.WallAction object at 0x150094dc0>
+B taking action 35
+illegal action <actions.WallAction object at 0x150094dc0>
+B taking action 35
+illegal action <actions.WallAction object at 0x150094dc0>
+B taking action 35
+illegal action <actions.WallAction object at 0x150094dc0>
+B taking action 35
+illegal action <actions.WallAction object at 0x150094dc0>
+B taking action 35
+illegal action <actions.WallAction object at 0x150094dc0>
+B taking action 35
+illegal action <actions.WallAction object at 0x150094dc0>
+B taking action 35
+illegal action <actions.WallAction object at 0x150094dc0>
+B taking action 1
+illegal action <actions.MoveAction object at 0x1504576a0>
+B taking action 1
+B taking action 1
+illegal action <actions.MoveAction object at 0x1504576a0>
+All valid moves were masked, do workaround.
+B taking action 1
+illegal action <actions.MoveAction object at 0x1504576a0>
+All valid moves were masked, do workaround.
+B taking action 1
+illegal action <actions.MoveAction object at 0x1504576a0>
+All valid moves were masked, do workaround.
+B taking action 1
+illegal action <actions.MoveAction object at 0x1504576a0>
+All valid moves were masked, do workaround.
+B taking action 1
+illegal action <actions.MoveAction object at 0x1504576a0>
+/Users/evaschiller/Documents/cs/grad/genv/lib/python3.9/site-packages/keras/src/layers/layer.py:360: UserWarning: `build()` was called on layer 'quoridor_neural_net', however the layer does not have a `build()` method implemented and it looks like it has unbuilt state. This will cause the layer to be marked as built, despite not being actually built, which may cause failures down the line. Make sure to implement a proper `build()` method.
+  warnings.warn(

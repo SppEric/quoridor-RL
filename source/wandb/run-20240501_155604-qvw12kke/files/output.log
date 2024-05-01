@@ -1,0 +1,284 @@
+Setting up agents for AlphaZero...
+completed
+BATCHSIZE IS 128
+BATCHSIZE IS 128
+------ITER 1------
+Episode step 0
+ERROR HERE
+grid (AGENT_BOT as current_agent)
+000010000
+000000000
+000000000
+000000000
+000000000
+000000000
+000000000
+000000000
+000050000
+Top Agent's walls left: 3
+Bot agent's walls left: 3
+ERROR HERE 2
+Episode step 1
+/Users/evaschiller/Documents/cs/grad/genv/lib/python3.9/site-packages/keras/src/layers/layer.py:360: UserWarning: `build()` was called on layer 'quoridor_neural_net', however the layer does not have a `build()` method implemented and it looks like it has unbuilt state. This will cause the layer to be marked as built, despite not being actually built, which may cause failures down the line. Make sure to implement a proper `build()` method.
+  warnings.warn(
+ERROR HERE
+grid (AGENT_BOT as current_agent)
+000010000
+000000000
+000000000
+000000000
+000-100000
+000-100000
+000-100000
+000000000
+000050000
+Top Agent's walls left: 3
+Bot agent's walls left: 2
+ERROR HERE 2
+Episode step 2
+ERROR HERE
+grid (AGENT_BOT as current_agent)
+000010000
+000000000
+000000000
+000000000
+000-10-1000
+000-10-1000
+000-10-1000
+000000000
+000050000
+Top Agent's walls left: 2
+Bot agent's walls left: 2
+ERROR HERE 2
+Episode step 3
+ERROR HERE
+grid (AGENT_BOT as current_agent)
+000010000
+000000000
+000000000
+-1-1-1000000
+000-10-1000
+000-10-1000
+000-10-1000
+000000000
+000050000
+Top Agent's walls left: 2
+Bot agent's walls left: 1
+illegal action <actions.MoveAction object at 0x1537194f0>
+ERROR HERE 2
+Episode step 4
+ERROR HERE
+grid (AGENT_BOT as current_agent)
+000000000
+000000000
+000000000
+-1-1-1000000
+000-10-1000
+000-10-1000
+000-10-1000
+000010000
+000050000
+Top Agent's walls left: 2
+Bot agent's walls left: 1
+ERROR HERE 2
+Episode step 5
+ERROR HERE
+grid (AGENT_BOT as current_agent)
+000000000
+000000000
+000000000
+-1-1-1000000
+000-10-10-10
+000-10-10-10
+000-10-10-10
+000010000
+000050000
+Top Agent's walls left: 2
+Bot agent's walls left: 0
+illegal action <actions.MoveAction object at 0x153719cd0>
+ERROR HERE 2
+Episode step 6
+ERROR HERE
+grid (AGENT_BOT as current_agent)
+000000000
+000000000
+000000000
+-1-1-1000000
+000-10-10-10
+000-10-10-10
+000-10-10-10
+001000000
+000050000
+Top Agent's walls left: 2
+Bot agent's walls left: 0
+ERROR HERE 2
+Episode step 7
+ERROR HERE
+grid (AGENT_BOT as current_agent)
+000000000
+000000000
+000000000
+-1-1-1000000
+000-10-10-10
+000-10-10-10
+000-10-10-10
+001000000
+000000500
+Top Agent's walls left: 2
+Bot agent's walls left: 0
+illegal action <actions.MoveAction object at 0x1537194f0>
+ERROR HERE 2
+Episode step 8
+ERROR HERE
+grid (AGENT_BOT as current_agent)
+000000000
+000000000
+000000000
+-1-1-1000000
+000-10-10-10
+001-10-10-10
+000-10-10-10
+000000000
+000000500
+Top Agent's walls left: 2
+Bot agent's walls left: 0
+ERROR HERE 2
+Episode step 9
+ERROR HERE
+grid (AGENT_BOT as current_agent)
+000000000
+000000000
+000000000
+-1-1-1000000
+000-10-10-10
+001-10-10-10
+000-10-10-10
+000000000
+000050000
+Top Agent's walls left: 2
+Bot agent's walls left: 0
+illegal action <actions.MoveAction object at 0x153719fa0>
+ERROR HERE 2
+Episode step 10
+ERROR HERE
+grid (AGENT_BOT as current_agent)
+000000000
+000000000
+000000000
+-1-1-1000000
+000-10-10-10
+000-11-10-10
+000-10-10-10
+000000000
+000050000
+Top Agent's walls left: 2
+Bot agent's walls left: 0
+ERROR HERE 2
+Episode step 11
+ERROR HERE
+grid (AGENT_BOT as current_agent)
+000000000
+000000000
+000000000
+-1-1-1000000
+000-10-10-10
+000-11-10-10
+000-15-10-10
+000000000
+000000000
+Top Agent's walls left: 2
+Bot agent's walls left: 0
+illegal action <actions.MoveAction object at 0x1537194f0>
+ERROR HERE 2
+Episode step 12
+ERROR HERE
+grid (AGENT_BOT as current_agent)
+000000000
+000000000
+000000000
+-1-1-1010000
+000-10-10-10
+000-10-10-10
+000-15-10-10
+000000000
+000000000
+Top Agent's walls left: 2
+Bot agent's walls left: 0
+ERROR HERE 2
+Episode step 13
+ERROR HERE
+grid (AGENT_BOT as current_agent)
+000000000
+000000000
+000000000
+-1-1-1010000
+000-10-10-10
+000-10-10-10
+000-10-10-10
+000000000
+000050000
+Top Agent's walls left: 2
+Bot agent's walls left: 0
+illegal action <actions.MoveAction object at 0x1537194f0>
+ERROR HERE 2
+Episode step 14
+ERROR HERE
+grid (AGENT_BOT as current_agent)
+000000000
+000010000
+000000000
+-1-1-1000000
+000-10-10-10
+000-10-10-10
+000-10-10-10
+000000000
+000050000
+Top Agent's walls left: 2
+Bot agent's walls left: 0
+ERROR HERE 2
+Episode step 15
+ERROR HERE
+grid (AGENT_BOT as current_agent)
+000000000
+000010000
+000000000
+-1-1-1000000
+000-10-10-10
+000-10-10-10
+000-10-10-10
+000000000
+005000000
+Top Agent's walls left: 2
+Bot agent's walls left: 0
+illegal action <actions.MoveAction object at 0x153719cd0>
+ERROR HERE 2
+Episode step 16
+ERROR HERE
+grid (AGENT_BOT as current_agent)
+000000000
+001000000
+000000000
+-1-1-1000000
+000-10-10-10
+000-10-10-10
+000-10-10-10
+000000000
+005000000
+Top Agent's walls left: 2
+Bot agent's walls left: 0
+ERROR HERE 2
+Episode step 17
+ERROR HERE
+grid (AGENT_BOT as current_agent)
+000000000
+001000000
+000000000
+-1-1-1000000
+000-10-10-10
+000-10-10-10
+000-10-10-10
+000000000
+000050000
+Top Agent's walls left: 2
+Bot agent's walls left: 0
+illegal action <actions.MoveAction object at 0x1537194f0>

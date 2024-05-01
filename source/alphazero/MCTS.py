@@ -30,13 +30,14 @@ class MCTS():
             probs: a policy vector where the probability of the ith action is
                    proportional to Nsa[(s,a)]**(1./temp)
         """
+
         for i in range(self.args.numMCTSSims):
             self.search(board, canonicalBoard)
         s = self.game.stringRepresentation(canonicalBoard)
         counts = [self.Nsa[(s,a)] if (s,a) in self.Nsa else 0 for a in range(self.game.getActionSize())]
 
-        if np.sum(counts) == 0: return counts
 
+        if np.sum(counts) == 0: return counts
         if temp==0:
             bestA = np.argmax(counts)
             probs = [0]*len(counts)
@@ -67,6 +68,7 @@ class MCTS():
         Returns:
             v: the negative of the value of the current canonicalBoard
         """
+        
         if counter == 0:
             self.sH = {}
         s = self.game.stringRepresentation(canonicalBoard)

@@ -188,7 +188,47 @@ class AZAgent:
         return agent_action
 
 
+class TopAZAgent(AZAgent):
+    """ Agent that starts out at the top of the screen and has a perspective that the board is 
+        flipped horizontally and vertically.
+    """
+    def __init__(self, static_actions):
+        super().__init__(static_actions, BoardElement.AGENT_TOP)
 
+    def get_perspective_state(self, board_state):
+        """ Appends grid squares to the state vector in reversed fashion, effectively flipping the
+            horizontal and vertical axes. Also appends BoardElement.AGENT_TOP's wall count before
+            BoardElement.AGENT_BOT's wall count because the current agent must come first to preserve consistency.
+        """
+        full_grid_size = board_state.full_grid_size
+        grid = board_state.build_grid(BoardElement.AGENT_TOP, BoardElement.AGENT_BOT)
+
+        vector = [grid[x][y] for y in reversed(range(full_grid_size)) for x in reversed(range(full_grid_size))]
+        vector.extend([board_state.wall_counts[BoardElement.AGENT_TOP], board_state.wall_counts[BoardElement.AGENT_BOT]])
+        return np.array(vector)
+
+    def action_to_global_and_back(self, agent_action):
+        """ Actions are also flipped on both axes. """
+        if isinstance(agent_action, MoveAction):
+            state_action = MoveAction(Point(-agent_action.direction.X, -agent_action.direction.Y))
+        else:
+            agent_wall_pos = agent_action.position
+            wall_pos = Point(constants.BOARD_SIZE - agent_wall_pos.X - 2, constants.BOARD_SIZE - agent_wall_pos.Y - 2)
+            state_action = WallAction(wall_pos, agent_action.orientation)
+        return state_action
+
+class BottomAZAgent(AZAgent):
+    """ Bottom agent has nothing to override because its perspective is the same as
+        the board's and the typical human perspective.
+    """
+    def __init__(self, static_actions):
+        super().__init__(static_actions, BoardElement.AGENT_BOT)
+
+    def get_perspective_state(self, board_state):
+        return super().get_perspective_state(board_state)
+
+    def action_to_global_and_back(self, agent_action):
+        return agent_action
 
 
 class TopAgent(Agent):

@@ -27,16 +27,25 @@ class Quoridor(Game):
         # action will be an index in the list of all possible elements
         # need to convert this to a wall/move action for the agent to take
         # we can assume it is valid/legal
+        board = copy.deepcopy(board)
 
         agent = self.game.agents["B" if player == 1 else "T"]
         # convert to action
         # we know that 0-8 are move actions, 9-72 are wall actions
+        # print("action index", action)
         action = self.game.static_actions.all_actions[action]
+
+        name = "B" if player == 1 else "T"
+        if not board.is_legal_action(action, name):
+            print("illegal action:")
+            if isinstance(action, MoveAction):
+                print("move action", action.direction)
+            else:
+                print("wall action", action.position, action.orientation)
         
         next_board, next_state_vector, reward = agent.take_action(board, action)
-        next_board_copy = copy.deepcopy(next_board)
 
-        return next_board_copy, -player
+        return next_board, -player
 
 
     def getValidMoves(self, board, player):
@@ -47,7 +56,7 @@ class Quoridor(Game):
         for i, action in enumerate(self.game.static_actions.all_actions):
             if board.is_legal_action(action, agent):
                 valid[i] = 1
-                
+        
         return valid
     
     def getGameEnded(self, board, player):

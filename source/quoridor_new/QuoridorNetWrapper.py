@@ -5,6 +5,7 @@ import random
 from quoridor_new.QuoridorNeuralNet import QuoridorNeuralNet
 import wandb
 from wandb.keras import WandbCallback
+import os
 
 
 

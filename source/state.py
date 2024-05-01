@@ -276,6 +276,9 @@ class State:
 
         # Need to also show the agent's location on the grid
         agent_position = self.agent_positions[current_agent]
+        # print(grid)
+        # print("agent_positions")
+        # print(agent_position.X * 2, agent_position.Y * 2)
         grid[agent_position.X * 2][agent_position.Y * 2] = BoardElement.SELF_AGENT
 
         enemy_position = self.agent_positions[enemy_agent]
@@ -291,7 +294,10 @@ class State:
         s = "grid (AGENT_BOT as current_agent)\n"
         for y in range(self.full_grid_size):
             for x in range(self.full_grid_size):
-                s += str(grid[x][y])
+                if grid[x][y] != -1:
+                    s += " " + str(grid[x][y])
+                else:
+                    s += " w"
             s+= "\n"
         s += "Top Agent's walls left: " + str(self.wall_counts[BoardElement.AGENT_TOP]) + "\n"
         s += "Bot agent's walls left: " + str(self.wall_counts[BoardElement.AGENT_BOT]) + "\n"
