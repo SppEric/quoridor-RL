@@ -1,1 +1,4 @@
 venv
+source/wandb
+source/temp
+**/__pycache__

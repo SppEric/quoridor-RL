@@ -1,8 +1,0 @@
-Setting up agents for AlphaZero...
-completed
-BATCHSIZE IS 64
-BATCHSIZE IS 64
-------ITER 1------
-B taking action 10
-/Users/evaschiller/Documents/cs/grad/genv/lib/python3.9/site-packages/keras/src/layers/layer.py:360: UserWarning: `build()` was called on layer 'quoridor_neural_net', however the layer does not have a `build()` method implemented and it looks like it has unbuilt state. This will cause the layer to be marked as built, despite not being actually built, which may cause failures down the line. Make sure to implement a proper `build()` method.
-  warnings.warn(
