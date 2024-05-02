@@ -49,7 +49,7 @@ class Quoridor(Game):
 
 
     def getValidMoves(self, board, player):
-        # THIS MIGHT SLOW US DOWN. SHOULD PROBABLY MAKE A FASTER VERSION
+        # NOTE: THIS MIGHT SLOW US DOWN. SHOULD PROBABLY MAKE A FASTER VERSION
         agent = "B" if player == 1 else "T"
         valid = np.zeros(self.getActionSize())
 

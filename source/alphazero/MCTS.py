@@ -1,7 +1,8 @@
+import copy
 import math
 import numpy as np
 EPS = 1e-8
-
+DEBUGGING = False
 class MCTS():
     """
     This class handles the MCTS tree.
@@ -30,9 +31,8 @@ class MCTS():
             probs: a policy vector where the probability of the ith action is
                    proportional to Nsa[(s,a)]**(1./temp)
         """
-
         for i in range(self.args.numMCTSSims):
-            self.search(board, canonicalBoard)
+            self.search(board, canonicalBoard, curPlayer)
         s = self.game.stringRepresentation(canonicalBoard)
         counts = [self.Nsa[(s,a)] if (s,a) in self.Nsa else 0 for a in range(self.game.getActionSize())]
 
@@ -47,8 +47,9 @@ class MCTS():
         counts = [x**(1./temp) for x in counts]
 
         valids = self.game.getValidMoves(board,curPlayer)
-        print("Counts", counts)
-        print(valids)
+        if DEBUGGING:
+            print("Counts", counts)
+            print(valids)
         counts = counts * valids
         if np.sum(counts) == 0:
             print("All valid moves were masked, do workaround.")
@@ -57,7 +58,7 @@ class MCTS():
         return probs
 
 
-    def search(self, board, canonicalBoard, counter=0):
+    def search(self, board, canonicalBoard, curPlayer, counter=0):
         """
         This function performs one iteration of MCTS. It is recursively called
         till a leaf node is found. The action chosen at each node is one that
@@ -82,14 +83,14 @@ class MCTS():
         s = self.game.stringRepresentation(canonicalBoard)
 
         if s not in self.Es:
-            self.Es[s] = self.game.getGameEnded(board, 1)
+            self.Es[s] = self.game.getGameEnded(board, curPlayer)
         if self.Es[s]!=0:
             # terminal node
             return -self.Es[s]
         if s not in self.Ps:
             # leaf node
             self.Ps[s], v = self.nnet.predict(canonicalBoard)
-            valids = self.game.getValidMoves(board, 1)
+            valids = self.game.getValidMoves(board, curPlayer)
             self.Ps[s] = self.Ps[s]*valids      # masking invalid moves
             sum_Ps_s = np.sum(self.Ps[s])
             if sum_Ps_s > 0:
@@ -126,10 +127,10 @@ class MCTS():
         self.sH[s] = 1
 
         a = best_act
-        next_board, next_player = self.game.getNextState(board, 1, a)
+        next_board, next_player = self.game.getNextState(board, curPlayer, a)
         next_s = self.game.getCanonicalForm(next_board, next_player)
 
-        v = self.search(next_board, next_s, counter+1)
+        v = self.search(next_board, next_s, next_player, counter+1)
         if v == 0:
             self.Ns[s] -= 1 if self.Ns[s] > 0 else 0
             return 0

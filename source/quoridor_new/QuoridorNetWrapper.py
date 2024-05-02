@@ -1,8 +1,8 @@
 from alphazero.NeuralNet import NeuralNet
 import tensorflow as tf
 import numpy as np
-import random
 from quoridor_new.QuoridorNeuralNet import QuoridorNeuralNet
+from quoridor_new.CustomLoss import quoridor_loss
 import wandb
 from wandb.keras import WandbCallback
 import os
@@ -14,20 +14,23 @@ class QuoridorNetWrapper(NeuralNet):
         # Set up from config
         self.config = config['parameters']
         if is_wandb:
-            self.optimizer = wandb.config.optimizer
+            self.optimizer = tf.keras.optimizers.Adam(0.001) # NOTE: Make this an if statement later wandb.config.optimizer
             self.batch_size = wandb.config.batch_size
             self.epochs = wandb.config.epochs
             print("BATCHSIZE IS", self.batch_size)
         else:
-            self.optimizer = config.optimizer
+            self.optimizer = tf.keras.optimizers.Adam(0.001)
             self.batch_size = config.batch_size
         self.wandb = is_wandb
 
         # We use a custom loss function, written below
-        self.loss_fn = self.quoridor_loss
+        self.loss_fn = quoridor_loss
 
         # Initialize model
         self.model = QuoridorNeuralNet(game, self.config)
+        self.model.compile(optimizer=self.optimizer,
+                           loss=self.loss_fn,
+                           )
 
 
     def train(self, examples):
@@ -50,14 +53,16 @@ class QuoridorNetWrapper(NeuralNet):
                 # Create inputs
                 sample_ids = np.random.randint(len(examples), size=self.batch_size)
                 boards, target_pis, target_vs = list(zip(*[examples[i] for i in sample_ids]))
+                boards = tf.stack(boards)
 
                 # Run model
                 with tf.GradientTape() as tape:
                     pred_pis, pred_vs = self.model(boards)
                     loss = self.loss_fn(pred_pis, target_pis, pred_vs, target_vs)
-
+                
                 # Logging
-                if batch_idx % 5 == 0:
+                epoch_loss.append(loss)
+                if batch_idx % 2 == 0:
                     print(
                         "Training loss (for one batch) at step %d: %.4f"
                         % (batch_idx, float(loss))
@@ -68,15 +73,17 @@ class QuoridorNetWrapper(NeuralNet):
                 batch_idx += 1
 
                 # Backprop
-                epoch_loss.append(loss)
                 grads = tape.gradient(loss, self.model.trainable_weights)
                 self.optimizer.apply_gradients(zip(grads, self.model.trainable_weights))
-
+            
             # Do logging for end of epoch stuff
-            # Idk what to track here
+            total_loss = np.mean(epoch_loss)
+            print("EPOCH LOSS: ", total_loss)
             if self.wandb:
-                wandb.log({'epochs': epoch,
-                    'loss': np.mean(epoch_loss)})
+                wandb.log({
+                    'epochs': epoch,
+                    'loss': total_loss
+                })
                 
 
     def predict(self, board):
@@ -109,28 +116,18 @@ class QuoridorNetWrapper(NeuralNet):
         else:
             print("Found directory!")
         print("Saving model...")
-
-        self.model.save(filepath)
+        
+        self.model.save(filepath, save_format='tf')
 
     def load_checkpoint(self, folder, filename):
         """
         Loads parameters of the neural network from folder/filename
         """
         filepath = os.path.join(folder, filename)
+        print(filepath)
         if not os.path.exists(filepath):
             raise(f"No model found at {filepath}")
         else:
-            self.model = tf.keras.models.load_model(filepath)
+            self.model = tf.keras.models.load_model(filepath, compile=False)
+            self.model.compile(loss=quoridor_loss, optimizer="adam")
             self.model.summary()
-
-
-    def quoridor_loss(self, pred_pis, target_pis, pred_vs, target_vs):
-        # Initialize loss functions
-        cce = tf.keras.losses.CategoricalCrossentropy(from_logits=True)
-        mse = tf.keras.losses.mean_squared_error
-
-        # Calculate loss
-        loss_pi = cce(target_pis, pred_pis)
-        loss_v = mse(target_vs, tf.reshape(pred_vs, shape=[-1,]))
-
-        return loss_pi + loss_v

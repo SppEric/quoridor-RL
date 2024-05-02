@@ -1,4 +1,5 @@
 from collections import deque
+import copy
 from alphazero.Arena import Arena
 from alphazero.MCTS import MCTS
 import numpy as np
@@ -6,6 +7,7 @@ import time, os, sys
 from pickle import Pickler, Unpickler
 from random import shuffle
 
+DEBUGGING = False
 
 class Coach():
     """
@@ -42,30 +44,29 @@ class Coach():
         self.curPlayer = 1
         episodeStep = 0
         
-        while True and episodeStep<200:
-            print("Episode step", episodeStep)
+        while True and episodeStep<50:
+            if episodeStep % 5 == 0:
+                print("Episode step", episodeStep)
             episodeStep += 1
             canonicalBoard = self.game.getCanonicalForm(board,self.curPlayer)
             temp = int(episodeStep < self.args.tempThreshold)
-            oldboard = board
             pi = self.mcts.getActionProb(board, self.curPlayer, canonicalBoard, temp=temp)
-            assert oldboard == board
 
             if np.sum(pi) == 0: break
 
-            #sym = self.game.getSymmetries(canonicalBoard, pi)
-            #for b,p in sym:
-            #    trainExamples.append([b, self.curPlayer, p, None])
+            # sym = self.game.getSymmetries(canonicalBoard, pi)
+            # for b,p in sym:
+            trainExamples.append([canonicalBoard, self.curPlayer, pi, None])
             #self.game.print_board(canonicalBoard)
 
             # can only pick if action is valid
-
             action = np.random.choice(len(pi), p=pi)
 
-            print(str(board))
-            print(pi)
+            if DEBUGGING:
+                print("ERROR HERE")
+                print(str(board))
             board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)
-
+            
             r = self.game.getGameEnded(board, self.curPlayer)
 
             if r!=0:
@@ -126,29 +127,29 @@ class Coach():
             shuffle(trainExamples)
 
             # training new network, keeping a copy of the old one
-            self.nnet.save_checkpoint(folder=self.args.checkpoint, filename='temp.pth.tar')
-            self.pnet.load_checkpoint(folder=self.args.checkpoint, filename='temp.pth.tar')
+            self.nnet.save_checkpoint(folder=self.args.checkpoint, filename='temp')
+            self.pnet.load_checkpoint(folder=self.args.checkpoint, filename='temp')
             pmcts = MCTS(self.game, self.pnet, self.args)
 
             self.nnet.train(trainExamples)
             nmcts = MCTS(self.game, self.nnet, self.args)
 
             print('PITTING AGAINST PREVIOUS VERSION')
-            arena = Arena(lambda x, y: np.argmax(pmcts.getActionProb(x, y, temp=0)),
-                          lambda x, y: np.argmax(nmcts.getActionProb(x, y, temp=0)), self.game)
+            arena = Arena(lambda x, y, z: np.argmax(pmcts.getActionProb(x, y, z, temp=0)),
+                          lambda x, y, z: np.argmax(nmcts.getActionProb(x, y, z, temp=0)), self.game)
             pwins, nwins, draws = arena.playGames(self.args.arenaCompare)
 
             print('NEW/PREV WINS : %d / %d ; DRAWS : %d' % (nwins, pwins, draws))
             if pwins+nwins > 0 and float(nwins)/(pwins+nwins) < self.args.updateThreshold:
                 print('REJECTING NEW MODEL')
-                self.nnet.load_checkpoint(folder=self.args.checkpoint, filename='temp.pth.tar')
+                self.nnet.load_checkpoint(folder=self.args.checkpoint, filename='temp')
             else:
                 print('ACCEPTING NEW MODEL')
                 self.nnet.save_checkpoint(folder=self.args.checkpoint, filename=self.getCheckpointFile(i))
-                self.nnet.save_checkpoint(folder=self.args.checkpoint, filename='best.pth.tar')
+                self.nnet.save_checkpoint(folder=self.args.checkpoint, filename='best')
 
     def getCheckpointFile(self, iteration):
-        return 'checkpoint_' + str(iteration) + '.pth.tar'
+        return 'checkpoint_' + str(iteration)
 
     def saveTrainExamples(self, iteration):
         folder = self.args.checkpoint
@@ -160,8 +161,8 @@ class Coach():
         f.closed
 
     def loadTrainExamples(self):
-        modelFile = os.path.join(self.args.load_folder_file[0], self.args.load_folder_file[1])
-        examplesFile = modelFile+".examples"
+        #modelFile = os.path.join(self.args.load_folder_file[0], self.args.load_folder_file[1])
+        examplesFile = './temp/checkpoint_9.examples'# Make it automatic later self.args.load_folder_file[0]+".examples"
         if not os.path.isfile(examplesFile):
             print(examplesFile)
             r = input("File with trainExamples not found. Continue? [y|n]")

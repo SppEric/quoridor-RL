@@ -13,17 +13,17 @@ class dotdict(dict):
 args = dotdict({
     'wandb': True,
     'numIters': 10, #1000
-    'numEps': 50, #100
+    'numEps': 100,
     'tempThreshold': 15,
     'updateThreshold': 0.55,
     'maxlenOfQueue': 200000,
-    'numMCTSSims': 50,
+    'numMCTSSims': 30,
     'arenaCompare': 40,
     'cpuct': 1,
 
     'checkpoint': './temp/',
     'load_model': False,
-    'load_folder_file': ('./temp','5x5best.pth.tar'),
+    'load_folder_file': ('./temp/','temp'),
     'numItersForTrainExamplesHistory': 20,
 })
 

@@ -23,7 +23,7 @@ class Arena():
         self.game = game
         self.display = display
 
-    def playGame(self, verbose=False):
+    def playGame(self, verbose=True):
         """
         Executes one episode of a game.
 
@@ -37,19 +37,20 @@ class Arena():
         curPlayer = 1
         board = self.game.getInitBoard()
         it = 0
-        while self.game.getGameEnded(board, curPlayer)==0 and it<200:
+        while self.game.getGameEnded(board, curPlayer)==0 and it<50:
             it+=1
             if verbose:
-                assert(self.display)
+                #assert(self.display)
                 print("Turn ", str(it), "Player ", str(curPlayer))
                 #self.display(board)
                 if players[curPlayer+1].__name__ != '<lambda>': # new
                     #os.system('clear')
                     self.display(self.game.getCanonicalForm(board, curPlayer), curPlayer)
 
-            action = players[curPlayer+1](board, self.game.getCanonicalForm(board, curPlayer))
-            valids = self.game.getValidMoves(board, 1)
+            action = players[curPlayer+1](board, curPlayer, self.game.getCanonicalForm(board, curPlayer))
+            valids = self.game.getValidMoves(board, curPlayer)
             if valids[action]==0:
+                # This shouldn't be possible?
                 return -curPlayer
                 #print ""
                 #print(action)
@@ -63,7 +64,7 @@ class Arena():
                 self.display(self.game.getCanonicalForm(board, -curPlayer), -curPlayer)
 
         if verbose:
-            assert(self.display)
+            #assert(self.display)
             print("Game over: Turn ", str(it), "Result ", str(self.game.getGameEnded(board, 1)))
             if verbose and players[curPlayer+1].__name__ == '<lambda>':
                 self.display(self.game.getCanonicalForm(board, -curPlayer), -curPlayer)
