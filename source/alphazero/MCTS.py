@@ -32,10 +32,10 @@ class MCTS():
                    proportional to Nsa[(s,a)]**(1./temp)
         """
         for i in range(self.args.numMCTSSims):
-            self.search(board, canonicalBoard, curPlayer)
+            self.search(board, curPlayer, canonicalBoard)
+
         s = self.game.stringRepresentation(canonicalBoard)
         counts = [self.Nsa[(s,a)] if (s,a) in self.Nsa else 0 for a in range(self.game.getActionSize())]
-
 
         if np.sum(counts) == 0: return counts
         if temp==0:
@@ -47,9 +47,6 @@ class MCTS():
         counts = [x**(1./temp) for x in counts]
 
         valids = self.game.getValidMoves(board,curPlayer)
-        if DEBUGGING:
-            print("Counts", counts)
-            print(valids)
         counts = counts * valids
         if np.sum(counts) == 0:
             print("All valid moves were masked, do workaround.")
@@ -58,7 +55,7 @@ class MCTS():
         return probs
 
 
-    def search(self, board, canonicalBoard, curPlayer, counter=0):
+    def search(self, board, curPlayer, canonicalBoard, counter=0):
         """
         This function performs one iteration of MCTS. It is recursively called
         till a leaf node is found. The action chosen at each node is one that
@@ -130,7 +127,7 @@ class MCTS():
         next_board, next_player = self.game.getNextState(board, curPlayer, a)
         next_s = self.game.getCanonicalForm(next_board, next_player)
 
-        v = self.search(next_board, next_s, next_player, counter+1)
+        v = self.search(next_board, next_player, next_s, counter+1)
         if v == 0:
             self.Ns[s] -= 1 if self.Ns[s] > 0 else 0
             return 0

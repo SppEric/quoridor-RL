@@ -44,9 +44,8 @@ class Coach():
         self.curPlayer = 1
         episodeStep = 0
         
-        while True and episodeStep<50:
-            if episodeStep % 5 == 0:
-                print("Episode step", episodeStep)
+        while True and episodeStep<200:
+            print("episodeStep", episodeStep)
             episodeStep += 1
             canonicalBoard = self.game.getCanonicalForm(board,self.curPlayer)
             temp = int(episodeStep < self.args.tempThreshold)
@@ -61,10 +60,6 @@ class Coach():
 
             # can only pick if action is valid
             action = np.random.choice(len(pi), p=pi)
-
-            if DEBUGGING:
-                print("ERROR HERE")
-                print(str(board))
             board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)
             
             r = self.game.getGameEnded(board, self.curPlayer)
@@ -127,8 +122,8 @@ class Coach():
             shuffle(trainExamples)
 
             # training new network, keeping a copy of the old one
-            self.nnet.save_checkpoint(folder=self.args.checkpoint, filename='temp')
-            self.pnet.load_checkpoint(folder=self.args.checkpoint, filename='temp')
+            self.nnet.save_checkpoint(folder=self.args.checkpoint, filename='temp.keras')
+            self.pnet.load_checkpoint(folder=self.args.checkpoint, filename='temp.keras')
             pmcts = MCTS(self.game, self.pnet, self.args)
 
             self.nnet.train(trainExamples)
@@ -142,14 +137,14 @@ class Coach():
             print('NEW/PREV WINS : %d / %d ; DRAWS : %d' % (nwins, pwins, draws))
             if pwins+nwins > 0 and float(nwins)/(pwins+nwins) < self.args.updateThreshold:
                 print('REJECTING NEW MODEL')
-                self.nnet.load_checkpoint(folder=self.args.checkpoint, filename='temp')
+                self.nnet.load_checkpoint(folder=self.args.checkpoint, filename='temp.keras')
             else:
                 print('ACCEPTING NEW MODEL')
                 self.nnet.save_checkpoint(folder=self.args.checkpoint, filename=self.getCheckpointFile(i))
-                self.nnet.save_checkpoint(folder=self.args.checkpoint, filename='best')
+                self.nnet.save_checkpoint(folder=self.args.checkpoint, filename='best.keras')
 
     def getCheckpointFile(self, iteration):
-        return 'checkpoint_' + str(iteration)
+        return 'checkpoint_' + str(iteration) + '.keras'
 
     def saveTrainExamples(self, iteration):
         folder = self.args.checkpoint

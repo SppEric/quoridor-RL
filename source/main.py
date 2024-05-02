@@ -23,7 +23,7 @@ args = dotdict({
 
     'checkpoint': './temp/',
     'load_model': False,
-    'load_folder_file': ('./temp/','temp'),
+    'load_folder_file': ('./temp','5x5best.keras'),
     'numItersForTrainExamplesHistory': 20,
 })
 
