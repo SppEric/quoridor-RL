@@ -207,6 +207,20 @@ class State:
         path_length = a_star(self.get_valid_neighbors, start, goal_test, heuristic)
         return path_length != -1
 
+    def length_to_goal(self, agent_name):
+        """ Returns the length of the shortest path to goal"""
+        start = self.agent_positions[agent_name]
+
+        if agent_name == BoardElement.AGENT_TOP:
+            goal_edge = constants.BOARD_SIZE - 1
+        else:
+            goal_edge = 0
+
+        goal_test = lambda point : point.Y == goal_edge
+        heuristic = lambda point : abs(point.Y - goal_edge)
+
+        path_length = a_star(self.get_valid_neighbors, start, goal_test, heuristic)
+        return path_length
 
 
     def apply_action(self, agent_name, legal_action):

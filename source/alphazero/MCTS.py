@@ -111,7 +111,6 @@ class MCTS():
         for a in range(self.game.getActionSize()):
             if valids[a]:
                 if (s,a) in self.Qsa:
-                    # NOTE: STOPPED INDEXING IN BY s HERE!!!
                     u = self.Qsa[(s,a)] + self.args.cpuct*self.Ps[s][0][a]*math.sqrt(self.Ns[s])/(1+self.Nsa[(s,a)])
                 else:
                     u = self.args.cpuct*self.Ps[s][0][a]*math.sqrt(self.Ns[s] + EPS)     # Q = 0 ?

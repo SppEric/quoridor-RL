@@ -61,16 +61,17 @@ class Arena():
             board, curPlayer = self.game.getNextState(board, curPlayer, action)
             if verbose and players[curPlayer+1].__name__ == '<lambda>': # new
                 #os.system('clear')
-                self.display(self.game.getCanonicalForm(board, -curPlayer), -curPlayer)
+                # self.display(self.game.getCanonicalForm(board, -curPlayer), -curPlayer)
+                self.display(board)
 
         if verbose:
             #assert(self.display)
             print("Game over: Turn ", str(it), "Result ", str(self.game.getGameEnded(board, 1)))
-            if verbose and players[curPlayer+1].__name__ == '<lambda>':
-                self.display(self.game.getCanonicalForm(board, -curPlayer), -curPlayer)
-            else:
-                self.display(self.game.getCanonicalForm(board, curPlayer), curPlayer)
-            #self.display(board)
+            # if verbose and players[curPlayer+1].__name__ == '<lambda>':
+            #     self.display(self.game.getCanonicalForm(board, -curPlayer), -curPlayer)
+            # else:
+            #     self.display(self.game.getCanonicalForm(board, curPlayer), curPlayer)
+            self.display(board)
 
         return self.game.getGameEnded(board, 1)
 

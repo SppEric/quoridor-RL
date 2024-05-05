@@ -2,10 +2,12 @@ from collections import deque
 import copy
 from alphazero.Arena import Arena
 from alphazero.MCTS import MCTS
+from alphazero.Minimax import Minimax
 import numpy as np
 import time, os, sys
 from pickle import Pickler, Unpickler
 from random import shuffle
+import tensorflow as tf
 
 DEBUGGING = False
 
@@ -18,8 +20,10 @@ class Coach():
         self.game = game
         self.nnet = nnet
         self.pnet = self.nnet.__class__(self.game, sweep_config, args.wandb)  # the competitor network
+        self.tempnet = self.nnet.__class__(self.game, sweep_config, args.wandb)  # the next most recent network
         self.args = args
         self.mcts = MCTS(self.game, self.nnet, self.args)
+        self.minimax = Minimax(self.game, self.nnet, self.args)
         self.trainExamplesHistory = []    # history of examples from args.numItersForTrainExamplesHistory latest iterations
         self.skipFirstSelfPlay = False # can be overriden in loadTrainExamples()
 
@@ -45,21 +49,36 @@ class Coach():
         episodeStep = 0
         
         while True and episodeStep<200:
-            print("episodeStep", episodeStep)
             episodeStep += 1
             canonicalBoard = self.game.getCanonicalForm(board,self.curPlayer)
             temp = int(episodeStep < self.args.tempThreshold)
-            pi = self.mcts.getActionProb(board, self.curPlayer, canonicalBoard, temp=temp)
 
-            if np.sum(pi) == 0: break
+            # Attempt to get action using minimax
+            win = 0
+            if self.args.minimax and 0 in board.wall_counts.values():
+                action, win = self.minimax.getActionMinimax(board, self.curPlayer)
 
-            # sym = self.game.getSymmetries(canonicalBoard, pi)
-            # for b,p in sym:
+                # Add dummy pi
+                pi = np.zeros(self.game.getActionSize())
+                pi[action] = 1
+            
+            # If minimax does not get to terminal state, use MCTS
+            if (not self.args.minimax) or (win != 1):
+                pi = self.mcts.getActionProb(board, self.curPlayer, canonicalBoard, temp=temp)
+
+                if np.sum(pi) == 0: break
+
+                # sym = self.game.getSymmetries(canonicalBoard, pi)
+                # for b,p in sym:
+                #self.game.print_board(canonicalBoard)
+
+                # can only pick if action is valid
+                action = np.random.choice(len(pi), p=pi)
+            else:
+                pass
+            
             trainExamples.append([canonicalBoard, self.curPlayer, pi, None])
-            #self.game.print_board(canonicalBoard)
-
-            # can only pick if action is valid
-            action = np.random.choice(len(pi), p=pi)
+            
             board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)
             
             r = self.game.getGameEnded(board, self.curPlayer)
@@ -90,6 +109,7 @@ class Coach():
                 end = time.time()
 
                 for eps in range(self.args.numEps):
+                    print("Episode", eps)  
                     self.mcts = MCTS(self.game, self.nnet, self.args)   # reset search tree
                     iterationTrainExamples += self.executeEpisode()
 
@@ -122,10 +142,11 @@ class Coach():
             shuffle(trainExamples)
 
             # training new network, keeping a copy of the old one
-            self.nnet.save_checkpoint(folder=self.args.checkpoint, filename='temp.keras')
-            self.pnet.load_checkpoint(folder=self.args.checkpoint, filename='temp.keras')
+            self.nnet.save_checkpoint(folder=self.args.checkpoint, filename='temp')
+            self.pnet.load_checkpoint(folder=self.args.checkpoint, filename='temp')
             pmcts = MCTS(self.game, self.pnet, self.args)
 
+            # self.nnet.model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.001))
             self.nnet.train(trainExamples)
             nmcts = MCTS(self.game, self.nnet, self.args)
 
@@ -137,14 +158,36 @@ class Coach():
             print('NEW/PREV WINS : %d / %d ; DRAWS : %d' % (nwins, pwins, draws))
             if pwins+nwins > 0 and float(nwins)/(pwins+nwins) < self.args.updateThreshold:
                 print('REJECTING NEW MODEL')
-                self.nnet.load_checkpoint(folder=self.args.checkpoint, filename='temp.keras')
+                #self.nnet.load_checkpoint(folder=self.args.checkpoint, filename='best')
+                self.nnet = self.tempnet
+                
             else:
                 print('ACCEPTING NEW MODEL')
                 self.nnet.save_checkpoint(folder=self.args.checkpoint, filename=self.getCheckpointFile(i))
-                self.nnet.save_checkpoint(folder=self.args.checkpoint, filename='best.keras')
+                self.nnet.save_checkpoint(folder=self.args.checkpoint, filename='best')
+                self.tempnet.load_checkpoint(folder=self.args.checkpoint, filename=self.getCheckpointFile(i))
+
+    def getNextAction(self, board, curPlayer, canonicalBoard):
+        p, v = self.nnet.predict(canonicalBoard)
+        valids = self.game.getValidMoves(board, curPlayer)
+        p = p*valids      # masking invalid moves
+        return np.argmax(p)
+
+    def getRandomAction(self, board, curPlayer, canonicalBoard):
+        valids = self.game.getValidMoves(board, curPlayer)
+        return np.random.choice(np.nonzero(valids)[0])
+    
+    def testPlayers(self):
+        
+        arena = Arena(lambda x, y, z: self.getNextAction(x, y, z), 
+                      lambda x, y, z: self.getRandomAction(x, y, z), self.game, display=print)
+        
+        print("PLAYING GAMES!")
+        arena.playGame(verbose=True)
+        
 
     def getCheckpointFile(self, iteration):
-        return 'checkpoint_' + str(iteration) + '.keras'
+        return 'checkpoint_' + str(iteration)
 
     def saveTrainExamples(self, iteration):
         folder = self.args.checkpoint

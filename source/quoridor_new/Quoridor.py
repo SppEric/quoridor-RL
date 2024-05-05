@@ -12,7 +12,10 @@ class Quoridor(Game):
 
         # The agents all have the same persepctive even though
         # the code doesn't seem like it. Might change this???
-        
+    
+    def getPlayerName(self, player):
+        return "B" if player == 1 else "T"
+    
     def getInitBoard(self):
         state = self.game.state
         return state
@@ -41,6 +44,8 @@ class Quoridor(Game):
             if isinstance(action, MoveAction):
                 print("move action", action.direction)
             else:
+                if board.wall_counts[name] == 0:
+                    print("illegal because no walls left for", name)
                 print("wall action", action.position, action.orientation)
         
         next_board, next_state_vector, reward = agent.take_action(board, action)

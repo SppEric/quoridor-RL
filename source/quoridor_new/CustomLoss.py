@@ -1,8 +1,8 @@
 import tensorflow as tf
 def quoridor_loss(pred_pis, target_pis, pred_vs, target_vs):
         # Initialize loss functions
-        cce = tf.keras.losses.CategoricalCrossentropy(from_logits=True)
-        mse = tf.keras.losses.mean_squared_error
+        cce = tf.keras.losses.CategoricalCrossentropy()
+        mse = tf.keras.losses.MeanSquaredError()
 
         # Calculate loss
         loss_pi = cce(target_pis, pred_pis)
