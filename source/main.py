@@ -25,9 +25,9 @@ args = dotdict({
     'arenaCompare': 20, #40
     'cpuct': 1,
 
-    'checkpoint': './temp/',
+    'checkpoint': './temp_heuristic/',
     'load_model': False,
-    'load_folder_file': ('./temp','best'),
+    'load_folder_file': ('./temp_heuristic','best'),
     'numItersForTrainExamplesHistory': 20,
 })
 
