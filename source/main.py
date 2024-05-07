@@ -12,9 +12,9 @@ class dotdict(dict):
 
 
 args = dotdict({
-    'testbest': False,
-    'minimax': False,
-    'wandb': True,
+    'testbest': True,
+    'minimax': True,
+    'wandb': False,
     'numIters': 150, #10
     'numEps': 50,
     'tempThreshold': 15,
@@ -25,9 +25,9 @@ args = dotdict({
     'arenaCompare': 20, #40
     'cpuct': 1,
 
-    'checkpoint': './temp_heuristic/',
+    'checkpoint': './temp/',
     'load_model': False,
-    'load_folder_file': ('./temp_heuristic','best'),
+    'load_folder_file': ('./temp','best'),
     'numItersForTrainExamplesHistory': 20,
 })
 

@@ -175,26 +175,20 @@ class Coach():
         # If minimax does not get to terminal state, use MCTS
         if (not self.args.minimax) or (win != 1):
             
-            p, v = self.nnet.predict(canonicalBoard)
-            valids = self.game.getValidMoves(board, curPlayer)
-            p = p*valids      # masking invalid moves
+            # p, v = self.nnet.predict(canonicalBoard)
+            # valids = self.game.getValidMoves(board, curPlayer)
+            # p = p*valids      # masking invalid moves
 
-            # if HEURISTICS: 
-            #     if np.random.random() > TAKE_SHORTEST_PATH_PROB:
-            #     # Place a wall w/ 1-prob_constant chance
-            #     p_mask = self.game.getProbableWalls(board, curPlayer, valids)
-            #     test_ps = self.Ps[s] * p_mask 
-            #     if np.sum(test_ps) == 0:
-            #         p_mask = None
-            #         # a = self.game.getShortestPathAction(board, curPlayer)
-            #         # if a is not None:
-            #         #     bypass = True
-            #     else:
-            #         a = self.game.getShortestPathAction(board, curPlayer)
-
-            action = np.argmax(p)
+            # action = np.argmax(p)
+            action = np.argmax(self.mcts.getActionProb(board, curPlayer, canonicalBoard))
 
         return action
+    
+    def getNextActionNoMini(self, board, curPlayer, canonicalBoard):
+        action = np.argmax(self.mcts.getActionProb(board, curPlayer, canonicalBoard))
+        return action
+
+
 
     def getRandomAction(self, board, curPlayer, canonicalBoard):
         valids = self.game.getValidMoves(board, curPlayer)
@@ -202,11 +196,11 @@ class Coach():
     
     def testPlayers(self):
         
-        # arena = Arena(lambda x, y, z: self.getNextAction(x, y, z), 
-        #               lambda x, y, z: self.getRandomAction(x, y, z), self.game, display=print)
+        arena = Arena(lambda x, y, z: self.getNextAction(x, y, z), 
+                      lambda x, y, z: self.getNextActionNoMini(x, y, z), self.game, display=print)
 
-        arena = Arena(lambda x, y, z: np.argmax(self.mcts.getActionProb(x, y, z)), 
-                      lambda x, y, z: self.getRandomAction(x, y, z), self.game, display=print)
+        # arena = Arena(lambda x, y, z: np.argmax(self.mcts.getActionProb(x, y, z)), 
+        #               lambda x, y, z: self.getRandomAction(x, y, z), self.game, display=print)
 
         print("PLAYING GAMES!")
         wins = 0
