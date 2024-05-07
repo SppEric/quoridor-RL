@@ -1,7 +1,7 @@
 from alphazero.NeuralNet import NeuralNet
 import tensorflow as tf
 import numpy as np
-from quoridor_new.QuoridorNeuralNet import QuoridorNeuralNet
+from quoridor_new.QuoridorNeuralNet import QuoridorNeuralNet, QuoridorConvNet
 from quoridor_new.CustomLoss import quoridor_loss
 import wandb
 from wandb.keras import WandbCallback
@@ -23,6 +23,8 @@ class QuoridorNetWrapper(NeuralNet):
             self.batch_size = self.config['batch_size']['values'][0]
             self.epochs = self.config['epochs']['values'][0]
         self.wandb = is_wandb
+        self.config['wandb'] = is_wandb
+        
 
         print(self.epochs, "EPOCHS")
         # We use a custom loss function, written below
@@ -31,7 +33,10 @@ class QuoridorNetWrapper(NeuralNet):
         action_size = game.getActionSize()
 
         # Initialize model
-        self.model = QuoridorNeuralNet(board_x, board_y, action_size, self.config)
+        if self.config['conv']['value']:
+            self.model = QuoridorConvNet(board_x, board_y, action_size, self.config)
+        else:
+            self.model = QuoridorNeuralNet(board_x, board_y, action_size, self.config)
         self.model.compile(optimizer=self.optimizer,
                            loss=self.loss_fn,
                            )
@@ -139,7 +144,10 @@ class QuoridorNetWrapper(NeuralNet):
         if not os.path.exists(filepath):
             raise(f"No model found at {filepath}")
         else:
-            custom_objects = {"QuoridorNeuralNet": QuoridorNeuralNet, "quoridor_loss": quoridor_loss}
+            if self.config['conv']['value']:
+                custom_objects = {"QuoridorConvNet": QuoridorConvNet, "quoridor_loss": quoridor_loss}
+            else:
+                custom_objects = {"QuoridorNeuralNet": QuoridorNeuralNet, "quoridor_loss": quoridor_loss}
 
             # Example of loading a model
             self.model = tf.keras.models.load_model(filepath, custom_objects=custom_objects)

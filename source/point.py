@@ -30,7 +30,7 @@ class Point:
     
     def toTuple(self):
         return (self.X, self.Y)
-    
+
     def __eq__(self, other):
         #try catch because sometimes comparing actions compars a point to None
         try:

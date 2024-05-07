@@ -3,7 +3,6 @@ from alphazero.Arena import Arena
 from quoridor_new.Quoridor import Quoridor
 from quoridor_new.QuoridorNetWrapper import QuoridorNetWrapper as nn
 import wandb
-from wandb.keras import WandbMetricsLogger, WandbModelCheckpoint
 import constants
 
 
@@ -16,14 +15,14 @@ args = dotdict({
     'testbest': False,
     'minimax': False,
     'wandb': True,
-    'numIters': 10, #10
-    'numEps': 100,
+    'numIters': 150, #10
+    'numEps': 50,
     'tempThreshold': 15,
     'updateThreshold': 0.55,
     'maxlenOfQueue': 200000,
     'maxDepthMinimax': 4, 
-    'numMCTSSims': 30, #30
-    'arenaCompare': 40, #40
+    'numMCTSSims': 20, #30
+    'arenaCompare': 20, #40
     'cpuct': 1,
 
     'checkpoint': './temp/',
@@ -40,20 +39,41 @@ sweep_config = {
   },
   'parameters': {
       'batch_size': {
-          'values': [32, 64, 128]
+          'values': [32]
       },
       'learning_rate':{
-          'values': [0.1, 0.05]
+          'values': [0.1]
       },
       'epochs': {
-          'values': [25, 50]
+          'values': [50]
       },
         'fc_layer_sizes': {
             'value': [128, 64, 32]
-        },
-
+      },
+      'conv_layer_sizes': {
+            'value': [128, 256]
+      },
+        'dropout': {
+            'value': [0.3]
+     },
+     'conv': {
+            'value': False
+     },
   }
 }
+
+def error_resistant_train(g, nnet, load):
+    # try:
+    if load:
+        nnet.load_checkpoint(args.load_folder_file[0], args.load_folder_file[1])
+    c = Coach(g, nnet, args, sweep_config)
+    if load:
+        c.loadTrainExamples()
+    c.learn()
+    # except ValueError:
+    #     print("Training stopped early")
+    #     error_resistant_train(g, nnet, True)
+
 
 def train():
     if args.wandb:
@@ -62,26 +82,15 @@ def train():
     g = Quoridor(constants.BOARD_SIZE)
     nnet = nn(g, sweep_config, args.wandb)
 
-    if args.load_model:
-        nnet.load_checkpoint(args.load_folder_file[0], args.load_folder_file[1])
-
-    c = Coach(g, nnet, args, sweep_config)
-    if args.load_model:
-        print("Load trainExamples from file")
-        c.loadTrainExamples()
-
-    try:
-        c.learn()
-    except ValueError:
-        print("Training stopped early")
-        pass
-
+    error_resistant_train(g, nnet, args.load_model)
 
 def testbest():
     g = Quoridor(constants.BOARD_SIZE)
     nnet = nn(g, sweep_config, args.wandb)
     nnet.load_checkpoint(args.load_folder_file[0], 'best')
-    
+    # if args.minimax:
+    #     nnet.load_checkpoint(args.load_folder_file_minimax[0], 'best')
+
     c = Coach(g, nnet, args, sweep_config)
     c.testPlayers()
 
@@ -93,10 +102,12 @@ if __name__=="__main__":
     else:
         print("Starting sweep")
         if args.wandb:
-            sweep_id = wandb.sweep(sweep_config, project="quoridor-RL")
-            wandb.agent(sweep_id, function=train, count=15)
+            if sweep_config['parameters']['conv']['value']:
+                sweep_id = wandb.sweep(sweep_config, project="quoridor-RL-conv")
+            else:
+                sweep_id = wandb.sweep(sweep_config, project="quoridor-RL")
+            wandb.agent(sweep_id, function=train, count=5)
         else:
             train()
-
 
 

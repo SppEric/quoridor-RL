@@ -2,6 +2,7 @@ from alphazero.Game import Game
 from game import QuoridorGame
 import numpy as np
 from actions import MoveAction, WallAction
+from point import Point
 import copy
 
 class Quoridor(Game):
@@ -63,6 +64,65 @@ class Quoridor(Game):
                 valid[i] = 1
         
         return valid
+    
+    def getProbableWalls(self, board, player, valids):
+        possible_walls = self.game.static_actions.all_actions[8:]
+
+        probable_wall_positions = []
+        
+
+        # Add walls near enemy
+        opposite_player = "T" if player == 1 else "B"
+        enemy_x, enemy_y = board.agent_positions[opposite_player].X, board.agent_positions[opposite_player].Y
+        probable_wall_positions += [(enemy_x, enemy_y, "H"), 
+                                    (enemy_x, enemy_y - 1, "H"), 
+                                    (enemy_x - 1, enemy_y, "H"),
+                                    (enemy_x - 1, enemy_y - 1, "H"),
+                                    (enemy_x, enemy_y, "V"),
+                                    (enemy_x, enemy_y - 1, "V"),
+                                    (enemy_x - 1, enemy_y, "V"),
+                                    (enemy_x - 1, enemy_y - 1, "V")]
+        
+
+        # # Add walls near other walls
+        # for wall in possible_walls:
+        #     x, y = wall.position.X, wall.position.Y
+        #     if board.walls[x][y] == "H":
+        #         probable_walls_positions += [(x - 1, y - 1, "V"), 
+        #                                      (x - 1, y, "V"), 
+        #                                      (x - 1, y + 1, "V"),
+        #                                      (x, y - 1, "V"),
+        #                                      (x, y + 1, "V"),
+        #                                      (x + 1, y - 1, "V"),
+        #                                      (x + 1, y, "V"),
+        #                                      (x + 1, y + 1, "V"),]
+        
+        probable_walls = np.zeros(self.getActionSize())
+        # board_max = self.getBoardSize()[0] - 1
+        for i, wall in enumerate(possible_walls):
+            x, y = wall.position.X, wall.position.Y
+            if (x, y, wall.orientation) in probable_wall_positions:
+                probable_walls[i + 8] = 1
+
+        return probable_walls
+
+        
+                
+                
+                
+    def getShortestPathAction(self, board, player):
+        player_name = "B" if player == 1 else "T"
+        point = board.path_to_goal(player)
+        if point == None:
+            print("No path to goal for", player_name)
+            return None
+        # get difference between agent and point
+        action_x = point.X - board.agent_positions[player_name].X
+        action_y = point.Y - board.agent_positions[player_name].Y
+        action = MoveAction(Point(action_x, action_y))
+        a = board.static_actions.get_index_of_action(action)
+        return a
+            
     
     def getGameEnded(self, board, player):
         player_name = "B" if player == 1 else "T"

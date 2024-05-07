@@ -7,7 +7,7 @@ from point import Point
 import constants
 from actions import StaticActions, MoveAction, WallAction
 
-from astar import a_star
+from astar import a_star, a_star_with_path
 from constants import BoardElement
 
 
@@ -206,6 +206,21 @@ class State:
 
         path_length = a_star(self.get_valid_neighbors, start, goal_test, heuristic)
         return path_length != -1
+    
+    def path_to_goal(self, agent_number):
+        """ Returns the path to the goal as a list of points"""
+        agent_name = BoardElement.AGENT_BOT if agent_number == 1 else BoardElement.AGENT_TOP
+        start = self.agent_positions[agent_name]
+
+        if agent_name == BoardElement.AGENT_TOP:
+            goal_edge = constants.BOARD_SIZE - 1
+        else:
+            goal_edge = 0
+
+        goal_test = lambda point : point.Y == goal_edge
+        heuristic = lambda point : abs(point.Y - goal_edge)
+        path = a_star_with_path(self.get_valid_neighbors, start, goal_test, heuristic)
+        return path
 
     def length_to_goal(self, agent_name):
         """ Returns the length of the shortest path to goal"""

@@ -3,6 +3,8 @@ import math
 import numpy as np
 EPS = 1e-8
 DEBUGGING = False
+HEURISTICS = False
+TAKE_SHORTEST_PATH_PROB = 0.5
 class MCTS():
     """
     This class handles the MCTS tree.
@@ -32,7 +34,7 @@ class MCTS():
                    proportional to Nsa[(s,a)]**(1./temp)
         """
         for i in range(self.args.numMCTSSims):
-            self.search(board, curPlayer, canonicalBoard)
+            v = self.search(board, curPlayer, canonicalBoard)
 
         s = self.game.stringRepresentation(canonicalBoard)
         counts = [self.Nsa[(s,a)] if (s,a) in self.Nsa else 0 for a in range(self.game.getActionSize())]
@@ -84,11 +86,14 @@ class MCTS():
         if self.Es[s]!=0:
             # terminal node
             return -self.Es[s]
+        
+
         if s not in self.Ps:
             # leaf node
             self.Ps[s], v = self.nnet.predict(canonicalBoard)
             valids = self.game.getValidMoves(board, curPlayer)
             self.Ps[s] = self.Ps[s]*valids      # masking invalid moves
+            
             sum_Ps_s = np.sum(self.Ps[s])
             if sum_Ps_s > 0:
                 self.Ps[s] /= sum_Ps_s    # renormalize
@@ -103,26 +108,61 @@ class MCTS():
 
             self.Vs[s] = valids
             self.Ns[s] = 0
+
+            # NOTE: STARTED AS -v
             return -v
+        
         valids = self.Vs[s]
+
+        ### THIS PART IS CHANGED FROM THE ORIGINAL CODE
+        ### NEW ###
+        bypass = False
+        p_mask = None
+        if HEURISTICS:
+            if np.random.random() > TAKE_SHORTEST_PATH_PROB:
+                # Place a wall w/ 1-prob_constant chance
+                p_mask = self.game.getProbableWalls(board, curPlayer, valids)
+                test_ps = self.Ps[s] * p_mask 
+                if np.sum(test_ps) == 0:
+                    p_mask = None
+                    # a = self.game.getShortestPathAction(board, curPlayer)
+                    # if a is not None:
+                    #     bypass = True
+            else:
+                a = self.game.getShortestPathAction(board, curPlayer)
+                if a is not None:
+                    bypass = True
+
+        ### END OF NEW ###
+
         cur_best = -float('inf')
         best_act = -1
+        state_revisit_penalty = 1
         # pick the action with the highest upper confidence bound
-        for a in range(self.game.getActionSize()):
-            if valids[a]:
-                if (s,a) in self.Qsa:
-                    u = self.Qsa[(s,a)] + self.args.cpuct*self.Ps[s][0][a]*math.sqrt(self.Ns[s])/(1+self.Nsa[(s,a)])
-                else:
-                    u = self.args.cpuct*self.Ps[s][0][a]*math.sqrt(self.Ns[s] + EPS)     # Q = 0 ?
-                if u > cur_best:
-                    cur_best = u
-                    best_act = a
+        if not bypass:
+            for a in range(self.game.getActionSize()):
+                if p_mask is not None and p_mask[a] == 0:
+                    continue
+                if valids[a]:
+                    if (s,a) in self.Qsa:
+                        u = self.Qsa[(s,a)] + self.args.cpuct*self.Ps[s][0][a]*math.sqrt(self.Ns[s])/(1+self.Nsa[(s,a)])
+                        # if s in self.sH:
+                        #     u -= state_revisit_penalty
+                    else:
+                        u = self.args.cpuct*self.Ps[s][0][a]*math.sqrt(self.Ns[s] + EPS)     # Q = 0 ?
+                        # if s in self.sH:
+                        #     u -= state_revisit_penalty
+                    if u > cur_best:
+                        cur_best = u
+                        best_act = a
+            a = best_act
 
-        if s in self.sH or counter > 256: # cycle
-            return 0
+        ### END OF CHANGED PART###
+
+        if s in self.sH or counter > 20: # cycle
+            return state_revisit_penalty
+        
         self.sH[s] = 1
-
-        a = best_act
         next_board, next_player = self.game.getNextState(board, curPlayer, a)
         next_s = self.game.getCanonicalForm(next_board, next_player)
 
@@ -141,3 +181,5 @@ class MCTS():
 
         self.Ns[s] += 1
         return -v
+    
+

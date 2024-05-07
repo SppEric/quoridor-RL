@@ -10,6 +10,7 @@ from random import shuffle
 import tensorflow as tf
 
 DEBUGGING = False
+HEURISTICS = False
 
 class Coach():
     """
@@ -53,29 +54,28 @@ class Coach():
             canonicalBoard = self.game.getCanonicalForm(board,self.curPlayer)
             temp = int(episodeStep < self.args.tempThreshold)
 
-            # Attempt to get action using minimax
-            win = 0
-            if self.args.minimax and 0 in board.wall_counts.values():
-                action, win = self.minimax.getActionMinimax(board, self.curPlayer)
+            # # Attempt to get action using minimax
+            # win = 0
+            # if self.args.minimax and 0 in board.wall_counts.values():
+            #     action, win = self.minimax.getActionMinimax(board, self.curPlayer)
 
-                # Add dummy pi
-                pi = np.zeros(self.game.getActionSize())
-                pi[action] = 1
+            #     # Add dummy pi
+            #     pi = np.zeros(self.game.getActionSize())
+            #     pi[action] = 1
             
             # If minimax does not get to terminal state, use MCTS
-            if (not self.args.minimax) or (win != 1):
-                pi = self.mcts.getActionProb(board, self.curPlayer, canonicalBoard, temp=temp)
+            # if (not self.args.minimax) or (win != 1):
+            pi = self.mcts.getActionProb(board, self.curPlayer, canonicalBoard, temp=temp)
 
-                if np.sum(pi) == 0: break
+            if np.sum(pi) == 0: break
 
-                # sym = self.game.getSymmetries(canonicalBoard, pi)
-                # for b,p in sym:
-                #self.game.print_board(canonicalBoard)
+            # sym = self.game.getSymmetries(canonicalBoard, pi)
+            # for b,p in sym:
+            #self.game.print_board(canonicalBoard)
 
-                # can only pick if action is valid
-                action = np.random.choice(len(pi), p=pi)
-            else:
-                pass
+            # can only pick if action is valid
+            action = np.random.choice(len(pi), p=pi)
+            
             
             trainExamples.append([canonicalBoard, self.curPlayer, pi, None])
             
@@ -168,10 +168,33 @@ class Coach():
                 self.tempnet.load_checkpoint(folder=self.args.checkpoint, filename=self.getCheckpointFile(i))
 
     def getNextAction(self, board, curPlayer, canonicalBoard):
-        p, v = self.nnet.predict(canonicalBoard)
-        valids = self.game.getValidMoves(board, curPlayer)
-        p = p*valids      # masking invalid moves
-        return np.argmax(p)
+        win = 0
+        if self.args.minimax and 0 in board.wall_counts.values():
+            action, win = self.minimax.getActionMinimax(board, curPlayer)
+        
+        # If minimax does not get to terminal state, use MCTS
+        if (not self.args.minimax) or (win != 1):
+            
+            p, v = self.nnet.predict(canonicalBoard)
+            valids = self.game.getValidMoves(board, curPlayer)
+            p = p*valids      # masking invalid moves
+
+            # if HEURISTICS: 
+            #     if np.random.random() > TAKE_SHORTEST_PATH_PROB:
+            #     # Place a wall w/ 1-prob_constant chance
+            #     p_mask = self.game.getProbableWalls(board, curPlayer, valids)
+            #     test_ps = self.Ps[s] * p_mask 
+            #     if np.sum(test_ps) == 0:
+            #         p_mask = None
+            #         # a = self.game.getShortestPathAction(board, curPlayer)
+            #         # if a is not None:
+            #         #     bypass = True
+            #     else:
+            #         a = self.game.getShortestPathAction(board, curPlayer)
+
+            action = np.argmax(p)
+
+        return action
 
     def getRandomAction(self, board, curPlayer, canonicalBoard):
         valids = self.game.getValidMoves(board, curPlayer)
@@ -179,11 +202,28 @@ class Coach():
     
     def testPlayers(self):
         
-        arena = Arena(lambda x, y, z: self.getNextAction(x, y, z), 
+        # arena = Arena(lambda x, y, z: self.getNextAction(x, y, z), 
+        #               lambda x, y, z: self.getRandomAction(x, y, z), self.game, display=print)
+
+        arena = Arena(lambda x, y, z: np.argmax(self.mcts.getActionProb(x, y, z)), 
                       lambda x, y, z: self.getRandomAction(x, y, z), self.game, display=print)
-        
+
         print("PLAYING GAMES!")
-        arena.playGame(verbose=True)
+        wins = 0
+        losses = 0
+        draws = 0
+        for _ in range(10):
+            outcome = arena.playGame(verbose=True)
+            if outcome == 1:
+                wins += 1
+            elif outcome == -1:
+                losses += 1
+            else:
+                draws += 1
+        print("Wins: ", wins)
+        print("Losses: ", losses)
+        print("Draws: ", draws)
+
         
 
     def getCheckpointFile(self, iteration):
@@ -200,7 +240,16 @@ class Coach():
 
     def loadTrainExamples(self):
         #modelFile = os.path.join(self.args.load_folder_file[0], self.args.load_folder_file[1])
-        examplesFile = './temp/checkpoint_9.examples'# Make it automatic later self.args.load_folder_file[0]+".examples"
+        examplesFile = './temp/checkpoint_8.examples'
+        # Make it automatic self.args.load_folder_file[0]+".examples"
+        m = 0
+        for file in os.listdir('./temp'):
+            # pick one with largest number
+            if file.endswith(".examples"):
+                if int(file.split('_')[1].split('.')[0]) > m:
+                    examplesFile = os.path.join('./temp', file)
+                    m = int(file.split('_')[1].split('.')[0])
+
         if not os.path.isfile(examplesFile):
             print(examplesFile)
             r = input("File with trainExamples not found. Continue? [y|n]")
