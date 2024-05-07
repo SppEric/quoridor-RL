@@ -3,7 +3,7 @@ import math
 import numpy as np
 EPS = 1e-8
 DEBUGGING = False
-HEURISTICS = True
+HEURISTICS = False
 TAKE_SHORTEST_PATH_PROB = 0.5
 class MCTS():
     """
