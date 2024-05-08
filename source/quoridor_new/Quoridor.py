@@ -40,14 +40,6 @@ class Quoridor(Game):
         action = self.game.static_actions.all_actions[action]
 
         name = "B" if player == 1 else "T"
-        if not board.is_legal_action(action, name):
-            print("illegal action:")
-            if isinstance(action, MoveAction):
-                print("move action", action.direction)
-            else:
-                if board.wall_counts[name] == 0:
-                    print("illegal because no walls left for", name)
-                print("wall action", action.position, action.orientation)
         
         next_board, next_state_vector, reward = agent.take_action(board, action)
 
@@ -114,7 +106,6 @@ class Quoridor(Game):
         player_name = "B" if player == 1 else "T"
         point = board.path_to_goal(player)
         if point == None:
-            print("No path to goal for", player_name)
             return None
         # get difference between agent and point
         action_x = point.X - board.agent_positions[player_name].X

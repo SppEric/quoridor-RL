@@ -15,19 +15,19 @@ args = dotdict({
     'testbest': True,
     'minimax': True,
     'wandb': False,
-    'numIters': 150, #10
+    'numIters': 10,
     'numEps': 50,
     'tempThreshold': 15,
     'updateThreshold': 0.55,
     'maxlenOfQueue': 200000,
-    'maxDepthMinimax': 4, 
+    'maxDepthMinimax': 3, 
     'numMCTSSims': 20, #30
     'arenaCompare': 20, #40
     'cpuct': 1,
 
     'checkpoint': './temp/',
     'load_model': False,
-    'load_folder_file': ('./temp','best'),
+    'load_folder_file': ('./','best'),
     'numItersForTrainExamplesHistory': 20,
 })
 
@@ -63,16 +63,12 @@ sweep_config = {
 }
 
 def error_resistant_train(g, nnet, load):
-    # try:
     if load:
         nnet.load_checkpoint(args.load_folder_file[0], args.load_folder_file[1])
     c = Coach(g, nnet, args, sweep_config)
     if load:
         c.loadTrainExamples()
     c.learn()
-    # except ValueError:
-    #     print("Training stopped early")
-    #     error_resistant_train(g, nnet, True)
 
 
 def train():

@@ -50,9 +50,8 @@ class Minimax():
             for move in valid_moves:
                 next_state, next_player = self.game.getNextState(state, curPlayer, move)
                 eval, _, win = self.minimax(next_state, depth - 1, next_player, alpha, beta, not maximizing_player)
-                # print("eval: ", eval, "depth: ", depth, "curPlayer: ", curPlayer, "move: ", move, "win: ", win)
                 # print(state)
-                if eval > max_eval:
+                if eval >= max_eval:
                     max_eval = eval
                     best_move = move
                     actual_winner = win
@@ -61,7 +60,7 @@ class Minimax():
                     break
 
             return max_eval, best_move, actual_winner
-            
+    
         else:
             min_eval = float('inf')
             for move in valid_moves:

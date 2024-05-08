@@ -54,17 +54,7 @@ class Coach():
             canonicalBoard = self.game.getCanonicalForm(board,self.curPlayer)
             temp = int(episodeStep < self.args.tempThreshold)
 
-            # # Attempt to get action using minimax
-            # win = 0
-            # if self.args.minimax and 0 in board.wall_counts.values():
-            #     action, win = self.minimax.getActionMinimax(board, self.curPlayer)
 
-            #     # Add dummy pi
-            #     pi = np.zeros(self.game.getActionSize())
-            #     pi[action] = 1
-            
-            # If minimax does not get to terminal state, use MCTS
-            # if (not self.args.minimax) or (win != 1):
             pi = self.mcts.getActionProb(board, self.curPlayer, canonicalBoard, temp=temp)
 
             if np.sum(pi) == 0: break
@@ -184,6 +174,7 @@ class Coach():
 
         return action
     
+    
     def getNextActionNoMini(self, board, curPlayer, canonicalBoard):
         action = np.argmax(self.mcts.getActionProb(board, curPlayer, canonicalBoard))
         return action
@@ -194,10 +185,16 @@ class Coach():
         valids = self.game.getValidMoves(board, curPlayer)
         return np.random.choice(np.nonzero(valids)[0])
     
+    def getMoveForwardAction(self, board, curPlayer, canonicalBoard):
+        valids = self.game.getValidMoves(board, curPlayer)
+        if valids[2] == 1:
+            return 2
+        return np.random.choice(np.nonzero(valids)[0])
+    
     def testPlayers(self):
         
         arena = Arena(lambda x, y, z: self.getNextAction(x, y, z), 
-                      lambda x, y, z: self.getNextActionNoMini(x, y, z), self.game, display=print)
+                      lambda x, y, z: self.getMoveForwardAction(x, y, z), self.game, display=print)
 
         # arena = Arena(lambda x, y, z: np.argmax(self.mcts.getActionProb(x, y, z)), 
         #               lambda x, y, z: self.getRandomAction(x, y, z), self.game, display=print)
@@ -206,7 +203,8 @@ class Coach():
         wins = 0
         losses = 0
         draws = 0
-        for _ in range(10):
+        i = 0
+        while i < 10:
             outcome = arena.playGame(verbose=True)
             if outcome == 1:
                 wins += 1
@@ -214,6 +212,9 @@ class Coach():
                 losses += 1
             else:
                 draws += 1
+            i += 1
+
+            
         print("Wins: ", wins)
         print("Losses: ", losses)
         print("Draws: ", draws)
