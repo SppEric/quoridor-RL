@@ -3,5 +3,4 @@ source/wandb
 source/temp
 **/__pycache__
 source/temp_minimax
-best.keras
 temp.keras
